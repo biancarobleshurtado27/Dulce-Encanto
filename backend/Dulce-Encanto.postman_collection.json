@@ -1,0 +1,921 @@
+{
+  "info": {
+    "name": "Dulce Encanto API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Salud MySQL",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/salud/db"
+      }
+    },
+    {
+      "name": "categorias",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/categorias"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/categorias/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/categorias",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Pasteles\"}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/categorias/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/categorias/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "productos",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/productos"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/productos/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/productos/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/productos/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "sucursales",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/sucursales"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/sucursales/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/sucursales",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/sucursales/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/sucursales/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "inventarios",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/inventarios"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/inventarios/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/inventarios",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/inventarios/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/inventarios/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "clientes",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/clientes"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/clientes/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/clientes",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/clientes/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/clientes/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ventas",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/ventas"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/ventas/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/ventas",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/ventas/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/ventas/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "detalles-venta",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/detalles-venta"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/detalles-venta/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/detalles-venta",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/detalles-venta/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/detalles-venta/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "metodos-pago",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/metodos-pago"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/metodos-pago/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/metodos-pago",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/metodos-pago/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/metodos-pago/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "empleados",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/empleados"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/empleados/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/empleados",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/empleados/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/empleados/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "proveedores",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/proveedores"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/proveedores/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/proveedores",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/proveedores/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/proveedores/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ingredientes",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/ingredientes"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/ingredientes/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/ingredientes",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/ingredientes/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/ingredientes/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "recetas",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/recetas"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/recetas/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/recetas",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/recetas/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/recetas/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "detalles-receta",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/detalles-receta"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/detalles-receta/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/detalles-receta",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/detalles-receta/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/detalles-receta/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ordenes-compra",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/ordenes-compra"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/ordenes-compra/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/ordenes-compra",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/ordenes-compra/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/ordenes-compra/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "detalles-compra",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/detalles-compra"
+          }
+        },
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/detalles-compra/1"
+          }
+        },
+        {
+          "name": "Crear (completar cuerpo según documentación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/detalles-compra",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar (completar cuerpo)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/detalles-compra/1",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/detalles-compra/1"
+          }
+        }
+      ]
+    }
+  ]
+}
