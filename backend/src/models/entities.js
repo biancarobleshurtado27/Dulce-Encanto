@@ -31,7 +31,7 @@ export function problem(message, status = 400) {
 export async function validate(db, table, input, create = false) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw problem('Se requiere un objeto JSON');
   const fields = await columns(db, table);
-  const editable = fields.filter(f => !f.Extra.includes('auto_increment') && !f.Extra.includes('GENERATED') && !['total','fecha_actualizacion'].includes(f.Field));
+  const editable = fields.filter(f => !f.Extra.includes('auto_increment') && !/(VIRTUAL|STORED) GENERATED/.test(f.Extra) && !['total','fecha_actualizacion'].includes(f.Field));
   const values = {};
   for (const [key, value] of Object.entries(input)) {
     const field = editable.find(f => f.Field === key);
@@ -86,3 +86,4 @@ export async function total(db, table, id) {
   const info = parents[table];
   await db.query(`UPDATE \`${table}\` SET total = (SELECT COALESCE(SUM(subtotal),0) FROM \`${info.table}\` WHERE \`${info.fk}\` = ?) WHERE \`${info.fk}\` = ?`,[id,id]);
 }
+
