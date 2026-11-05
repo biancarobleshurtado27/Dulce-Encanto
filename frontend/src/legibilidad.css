@@ -1,0 +1,99 @@
+/* Tamaños de lectura compartidos por las 15 entidades y las pantallas de acceso. */
+:root{font-size:16px}
+body{font-size:16px;line-height:1.6}
+.nav{font-size:15px;padding:12px 10px;line-height:1.45}
+.sidebar h2{font-size:12px;line-height:1.6}
+.side-foot,.side-foot small{font-size:12px;line-height:1.6}
+.side-foot{flex-wrap:wrap;gap:6px}
+.sidebar{padding-bottom:110px}
+.eyebrow{font-size:12px;line-height:1.6}
+.location-tag,.user-name,.session-tools .secondary{font-size:14px;line-height:1.5}
+.topbar{min-height:76px;height:auto;padding-top:14px;padding-bottom:14px;gap:15px}
+.page-title p{font-size:15px;line-height:1.75;color:#6e595f}
+.primary,.secondary,.danger{font-size:14px;line-height:1.5;min-height:44px}
+.page-actions{max-width:440px}
+.metric>div>span{font-size:12px;line-height:1.5;color:#6e595f}
+.metric small{font-size:13px;line-height:1.6;color:#6e595f}
+.metric strong{font-size:30px}
+.metric{min-height:155px}
+.tools input,.tools select{font-size:14px;line-height:1.5;min-height:44px}
+table,td{font-size:14px;line-height:1.6}
+th{font-size:12px;line-height:1.5;letter-spacing:.3px}
+td{padding:20px 16px}
+.badge{font-size:12px;line-height:1.5;padding:5px 10px}
+.badge.yes:before{font-size:9px}
+.product-cell{gap:12px}
+.product-cell img,.product-placeholder{width:48px;height:48px}
+td.product-name{font-size:19px}
+.route-productos table{min-width:1080px}
+.route-productos thead tr,.route-productos tbody tr{grid-template-columns:120px minmax(240px,1fr) 180px 140px 115px 115px 105px}
+.route-productos tr>:nth-child(3){font-size:13px}
+.route-productos tbody tr>:nth-child(2){font-size:13px}
+.actions button{padding:10px;min-width:40px;min-height:40px}
+.actions button svg{width:18px;height:18px}
+.pagination,.pagination label,.pagination select,.pagination button{font-size:13px;line-height:1.5}
+.pagination select,.pagination button{min-height:40px}
+.pagination{gap:14px;padding:20px}
+.pagination .current-page{font-size:14px}
+.fields label{font-size:14px;line-height:1.6}
+.fields input,.fields select,.fields textarea{font-size:16px;line-height:1.5;min-height:46px}
+.fields{gap:20px}
+.hint{font-size:13px;line-height:1.75;color:#6e595f}
+.detail-head,.detail-head button{font-size:13px;line-height:1.5}
+.details h3{font-size:17px}
+.dialog-head .eyebrow,.product-drawer .dialog-head .eyebrow{font-size:13px}
+.editor-overlay .product-drawer{width:540px}
+.alert,.small p{font-size:15px;line-height:1.75}
+.empty p{font-size:15px;line-height:1.7}
+footer,footer span{font-size:12px;line-height:1.6;color:#6e595f}
+.sale-entry header p,.sales-history header p{font-size:13px;line-height:1.6;color:#6e595f}
+.text-button,.line-heading,.line-heading span{font-size:13px;line-height:1.6}
+.sale-entry>header,.sales-history>header{flex-wrap:wrap}
+.sale-line{grid-template-columns:40px minmax(140px,1fr) 85px 110px}
+.sale-line label{font-size:12px;line-height:1.6}
+.sale-line select,.sale-line input{font-size:15px;line-height:1.5;min-height:44px}
+.sale-line strong{font-size:17px}
+.add-line{font-size:14px;line-height:1.6;min-height:46px}
+.sale-total>span,.sale-total div>span{font-size:13px;line-height:1.6}
+.sale-total small{font-size:12px;line-height:1.7;color:#6e595f}
+.sale-total strong{font-size:32px}
+.history-search{font-size:14px;line-height:1.6;min-height:46px}
+.sale-card strong{font-size:16px}
+.sale-card>p{font-size:15px;line-height:1.6}
+.sale-card small{font-size:12px;line-height:1.6;color:#6e595f}
+.sale-card b{font-size:19px}
+.sale-card-foot button{font-size:13px;line-height:1.6;min-height:38px}
+.count-chip{font-size:13px;line-height:1.5}
+.auth-card label{font-size:15px;line-height:1.6}
+.auth-card input{font-size:17px;line-height:1.5;min-height:52px}
+.auth-card>p{font-size:15px;line-height:1.7}
+.auth-card>.primary{font-size:16px;line-height:1.5;min-height:54px}
+.auth-card .auth-link{font-size:14px;line-height:1.75}
+.auth-card small{font-size:13px;line-height:1.7;color:#6e595f}
+.auth-foot{font-size:12px;line-height:1.6}
+.province-chip{font-size:12px;line-height:1.5}
+.story-quote p{font-size:14px;line-height:1.75}
+.atelier-brand small{font-size:11px;line-height:1.4}
+.password-field button{min-width:36px;min-height:36px;top:8px;right:8px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #873d57;outline-offset:3px}
+@media(max-width:1200px){.metric strong{font-size:27px}.metric small{font-size:13px}.metric>div>span{font-size:12px}.page-title{flex-wrap:wrap}.page-actions{max-width:none}.sales-workspace{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:900px){.metric small{font-size:13px}.metric>div>span{font-size:12px}.location-tag{font-size:13px}.page-title{align-items:stretch}}
+@media(max-width:650px){
+ .content{padding:24px 16px}.topbar{height:auto;min-height:72px;padding:12px 16px}
+ .session-tools{flex-wrap:wrap;justify-content:flex-end}.user-name,.session-tools .secondary{font-size:13px;line-height:1.5}
+ .metric{min-height:155px;padding:16px 12px}.metric>div>span{font-size:11px;line-height:1.5}.metric small{font-size:12px;line-height:1.6}.metric strong{font-size:25px}
+ .metric-grid{gap:12px}.metric>div{flex-wrap:wrap}
+ .page-actions .secondary,.page-actions .primary{font-size:14px}.page-actions{gap:10px}
+ .pagination,.pagination label,.pagination button,.pagination select{font-size:13px}
+ .editor-overlay .product-drawer{width:100%;max-width:100%}
+ .sale-entry .fields{grid-template-columns:1fr}
+ .sale-line{grid-template-columns:minmax(0,1fr) 90px;gap:12px}
+ .sale-product-icon{display:none}.sale-line>label:first-of-type{grid-column:1/-1}
+ .sale-line>label:nth-of-type(2){grid-column:1}.sale-line>label:nth-of-type(3){grid-column:2}
+ .sale-line strong{grid-column:1}.sale-line .icon-button{grid-column:2;grid-row:auto}
+ .sale-line select,.sale-line input{font-size:16px}.sale-card b{font-size:18px}
+ .sale-total>div{flex-wrap:wrap;align-items:flex-start}.sale-total strong{font-size:30px}
+ .auth-card label{font-size:15px}.auth-card input{font-size:17px}.auth-card>p{font-size:15px}
+ .auth-card .auth-link{font-size:14px}.auth-card small{font-size:13px}
+ .auth-foot{font-size:12px}.auth-main{padding:30px 22px}
+}
