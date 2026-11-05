@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { api } from './routes/api.js';
+import { authRoutes } from './routes/authRoutes.js';
 
 const app = express();
 app.disable('x-powered-by');
@@ -15,6 +16,7 @@ app.get('/api/salud', (_req, res) => {
   res.json({ estado: 'ok', servicio: 'Dulce Encanto API' });
 });
 
+app.use('/api/auth', authRoutes);
 app.use('/api', api);
 
 app.use((_req, res) => {

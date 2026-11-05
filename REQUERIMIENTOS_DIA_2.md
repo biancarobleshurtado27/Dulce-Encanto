@@ -5,12 +5,12 @@ El día 2 reemplaza la regla sin autenticación del día 1. Fecha límite indica
 - [x] Leer los requisitos del día 2 y revisar el avance previo.
 - [x] CRUD de las 15 entidades empresariales implementados (pendiente repetir pruebas con autenticación).
 - [x] Informe previo sobre JWT, expiración, refresh, almacenamiento, XSS/CSRF, middleware y seguridad, con fuentes.
-- [ ] Agregar Usuario: id, nombre, correo único, password hash y fechaCreacion.
-- [ ] Registro público POST /api/auth/register (201; correo duplicado 400).
-- [ ] Login público POST /api/auth/login (200 o 401).
-- [ ] Perfil protegido GET /api/auth/me (200 o 401).
-- [ ] Bcrypt, contraseña mínima de 8 caracteres; hash nunca devuelto.
-- [ ] JWT con expiración y clave en .env.
+- [x] Agregar Usuario: id, nombre, correo único, password hash y fechaCreacion.
+- [x] Registro público POST /api/auth/register (201; correo duplicado 400).
+- [x] Login público POST /api/auth/login (200 o 401).
+- [x] Perfil protegido GET /api/auth/me (200 o 401).
+- [x] Bcrypt, contraseña mínima de 8 caracteres; hash nunca devuelto.
+- [x] JWT con expiración y clave en .env.
 - [ ] Middleware Bearer; rutas empresariales protegidas; 401 sin autorización.
 - [ ] Relaciones inexistentes: devolver 400 o 404; dependencia al eliminar: 409.
 - [ ] Adaptar React: login, registro, AuthContext y rutas protegidas.
