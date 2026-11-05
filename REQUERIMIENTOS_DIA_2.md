@@ -23,6 +23,7 @@ El día 2 reemplaza la regla sin autenticación del día 1. Fecha límite indica
 - [x] Actualizar README, configuración de ejemplo y guía de presentación.
 - [x] Revisar archivos de entrega y exclusión de .env y node_modules.
 - [x] Verificar generación de JWT_SECRET al instalar con el valor de ejemplo vacío.
-- [ ] Sincronizar entregables del día 2 en GitHub.
+- [x] Sincronizar entregables del día 2 en GitHub.
 
 No se exigen roles ni permisos. La sección específica de Usuario exige registro, login y perfil; los cinco endpoints CRUD se mantienen en las entidades empresariales.
+
