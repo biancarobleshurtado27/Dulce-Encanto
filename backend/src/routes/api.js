@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { entities, columns } from '../models/entities.js';
 import { pool } from '../config/database.js';
+import asistenteRoutes from './asistenteRoutes.js';
 import CategoriasRoutes from './CategoriasRoutes.js';
 import ProductosRoutes from './ProductosRoutes.js';
 import SucursalesRoutes from './SucursalesRoutes.js';
@@ -18,6 +19,7 @@ import OrdenesCompraRoutes from './OrdenesCompraRoutes.js';
 import DetallesCompraRoutes from './DetallesCompraRoutes.js';
 
 export const api = Router();
+api.use('/asistente',asistenteRoutes);
 api.get('/entidades', async (_req,res,next) => {
   try {
     const result = [];
