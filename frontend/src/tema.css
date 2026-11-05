@@ -1,0 +1,45 @@
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:9px 12px;border:1px solid #e8cdd7;border-radius:9px;background:#fff0f2;color:#6a2640;font-size:13px;white-space:nowrap}
+.theme-toggle:hover{background:#f8dbe2}.auth-theme{display:flex;justify-content:flex-end;margin-bottom:22px}.auth-theme .theme-toggle{margin-left:auto}
+html[data-theme="dark"]{color-scheme:dark;--dark-bg:#171216;--dark-surface:#231b21;--dark-soft:#30232c;--dark-pink:#402b36;--dark-border:#503b47;--dark-text:#f6edf1;--dark-muted:#c8b6bf;--dark-accent:#f3b1c8;background:var(--dark-bg);color:var(--dark-text)}
+[data-theme="dark"] body,[data-theme="dark"] .shell,[data-theme="dark"] .auth-page{background:var(--dark-bg);color:var(--dark-text)}
+[data-theme="dark"] .sidebar,[data-theme="dark"] .panel,[data-theme="dark"] .metric,[data-theme="dark"] .sale-entry,[data-theme="dark"] .sales-history,[data-theme="dark"] .dialog,[data-theme="dark"] .auth-frame,[data-theme="dark"] .auth-main{background:var(--dark-surface);color:var(--dark-text)}
+[data-theme="dark"] .topbar,[data-theme="dark"] .pagination,[data-theme="dark"] th,[data-theme="dark"] .location-tag,[data-theme="dark"] .side-foot{background:#261c23;color:var(--dark-muted);border-color:var(--dark-border)}
+[data-theme="dark"] .atelier-brand,[data-theme="dark"] h1,[data-theme="dark"] h2,[data-theme="dark"] h3,[data-theme="dark"] .eyebrow,[data-theme="dark"] .auth-card h1{color:var(--dark-accent)}
+[data-theme="dark"] .atelier-brand small,[data-theme="dark"] .sidebar h2,[data-theme="dark"] .side-foot small,[data-theme="dark"] .page-title p,[data-theme="dark"] .metric small,[data-theme="dark"] .metric>div>span,[data-theme="dark"] .hint,[data-theme="dark"] footer,[data-theme="dark"] footer span,[data-theme="dark"] .auth-card>p,[data-theme="dark"] .auth-card small,[data-theme="dark"] .auth-foot{color:var(--dark-muted)}
+[data-theme="dark"] .nav{color:var(--dark-text)}[data-theme="dark"] .nav:hover{background:var(--dark-soft);color:var(--dark-accent)}[data-theme="dark"] .nav.active{background:var(--dark-pink);color:#ffd8e6;box-shadow:inset 3px 0 #ef9dbb}
+[data-theme="dark"] .theme-toggle,[data-theme="dark"] .secondary,[data-theme="dark"] .icon-button,[data-theme="dark"] .close,[data-theme="dark"] .user-avatar{background:var(--dark-soft);color:var(--dark-accent);border-color:var(--dark-border)}
+[data-theme="dark"] .theme-toggle:hover,[data-theme="dark"] .secondary:hover:not(:disabled),[data-theme="dark"] .icon-button:hover:not(:disabled){background:var(--dark-pink)}
+[data-theme="dark"] .primary{background:#a84f72;border-color:#ce7e9d;color:#fff}[data-theme="dark"] .primary:hover:not(:disabled){background:#ba5d82;box-shadow:0 5px 16px #0004}
+[data-theme="dark"] .danger{background:#a4384b;border-color:#d26c7d;color:white}
+[data-theme="dark"] input,[data-theme="dark"] select,[data-theme="dark"] textarea,[data-theme="dark"] .tools input,[data-theme="dark"] .tools select,[data-theme="dark"] .fields input,[data-theme="dark"] .fields select,[data-theme="dark"] .fields textarea,[data-theme="dark"] .auth-card input,[data-theme="dark"] .history-search,[data-theme="dark"] .sale-line input,[data-theme="dark"] .sale-line select{background:#30232c;color:var(--dark-text);border-color:var(--dark-border);box-shadow:none}
+[data-theme="dark"] input::placeholder,[data-theme="dark"] textarea::placeholder{color:#b39ca7;opacity:1}
+[data-theme="dark"] option{background:#30232c;color:var(--dark-text)}
+[data-theme="dark"] .fields label,[data-theme="dark"] .auth-card label,[data-theme="dark"] .sale-line label,[data-theme="dark"] .line-heading,[data-theme="dark"] .sale-entry h2,[data-theme="dark"] .sales-history h2{color:var(--dark-text)}
+[data-theme="dark"] td,[data-theme="dark"] th,[data-theme="dark"] .route-productos tr,[data-theme="dark"] .form-actions,[data-theme="dark"] .sale-entry>header,[data-theme="dark"] .sales-history>header,[data-theme="dark"] .sale-card-foot,[data-theme="dark"] .details{border-color:var(--dark-border)}
+[data-theme="dark"] .actions{background:var(--dark-surface)}[data-theme="dark"] tbody tr:hover,[data-theme="dark"] .sale-card:hover{background:#30232c}
+[data-theme="dark"] .actions button,[data-theme="dark"] .sale-card-foot button,[data-theme="dark"] .pagination button,[data-theme="dark"] .text-button,[data-theme="dark"] .detail-head button,[data-theme="dark"] .auth-link a{color:#f3b1c8}
+[data-theme="dark"] .actions .danger-text{color:#ffa9b3}
+[data-theme="dark"] td.product-name,[data-theme="dark"] .metric strong{color:var(--dark-text)}
+[data-theme="dark"] .route-productos tr>:nth-child(3),[data-theme="dark"] .route-productos tr>:nth-child(6){color:var(--dark-accent)}
+[data-theme="dark"] .route-productos tbody tr>:nth-child(2){color:var(--dark-muted)}
+[data-theme="dark"] .metric svg,[data-theme="dark"] .metric:hover svg,[data-theme="dark"] .product-placeholder,[data-theme="dark"] .count-chip,[data-theme="dark"] .badge,[data-theme="dark"] .sales-history header>svg{background:var(--dark-pink);color:#ffd3e3}
+[data-theme="dark"] .badge.yes{background:#264734;color:#bceccc}
+[data-theme="dark"] .detail,[data-theme="dark"] .sale-line,[data-theme="dark"] .sale-card,[data-theme="dark"] .product-drawer .dialog-head{background:#2e222a}
+[data-theme="dark"] .sale-total,[data-theme="dark"] .add-line{background:#402a36;color:#ffd3e3}
+[data-theme="dark"] .sale-total strong,[data-theme="dark"] .sale-line strong,[data-theme="dark"] .sale-card strong,[data-theme="dark"] .route-ventas .metric:nth-child(2) strong{color:var(--dark-accent)}
+[data-theme="dark"] .sale-total>div{border-color:#654554}
+[data-theme="dark"] .sale-total>span,[data-theme="dark"] .sale-total small,[data-theme="dark"] .sale-card small,[data-theme="dark"] .sale-entry header p,[data-theme="dark"] .sales-history header p,[data-theme="dark"] .line-heading span{color:var(--dark-muted)}
+[data-theme="dark"] .form-actions{background:var(--dark-surface)}
+[data-theme="dark"] .alert.error{background:#512830;color:#ffd0d5}[data-theme="dark"] .alert.success{background:#244a35;color:#d4f5df}
+[data-theme="dark"] .empty,[data-theme="dark"] .empty p,[data-theme="dark"] .loading-state,[data-theme="dark"] .small p{color:var(--dark-muted)}
+[data-theme="dark"] .empty h3,[data-theme="dark"] .empty>span{color:var(--dark-accent)}
+[data-theme="dark"] .loading-state i{background:linear-gradient(90deg,#30232c 25%,#503241 50%,#30232c 75%);background-size:200% 100%}
+[data-theme="dark"] .back-to-top{background:var(--dark-surface);color:var(--dark-accent);border-color:var(--dark-border)}
+[data-theme="dark"] .overlay{background:#080609b8}
+[data-theme="dark"] .province-chip{background:#231b21e8;color:#f6edf1}
+[data-theme="dark"] .story-quote{background:#231b21e8;color:#f6edf1}[data-theme="dark"] .story-quote blockquote{color:#f6edf1}[data-theme="dark"] .story-quote h2,[data-theme="dark"] .stars{color:#f3b1c8}[data-theme="dark"] .story-quote p{color:#d4bec8}[data-theme="dark"] .story-quote>svg{background:#503241;color:#ffd3e3}
+[data-theme="dark"] .password-field button{color:var(--dark-muted)}
+[data-theme="dark"] button:focus-visible,[data-theme="dark"] a:focus-visible,[data-theme="dark"] input:focus-visible,[data-theme="dark"] select:focus-visible,[data-theme="dark"] textarea:focus-visible{outline-color:#f3b1c8}
+[data-theme="dark"] .side-foot i,[data-theme="dark"] .auth-foot i{background:#9dd8b0}
+@media(max-width:900px){.theme-toggle{padding:9px;min-width:42px}.session-tools .theme-toggle span{display:none}}
+@media(prefers-reduced-motion:no-preference){body,.sidebar,.topbar,.panel,.metric,.dialog,.auth-main,.sales-history,.sale-entry{transition:background-color 180ms ease,color 180ms ease}}
