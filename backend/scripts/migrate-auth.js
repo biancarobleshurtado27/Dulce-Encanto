@@ -1,4 +1,4 @@
-import {readFile,appendFile} from 'node:fs/promises';
+import {readFile,writeFile} from 'node:fs/promises';
 import {randomBytes} from 'node:crypto';
 import {pool} from '../src/config/database.js';
 try {
@@ -6,6 +6,10 @@ try {
   await pool.query(sql);
   const envUrl=new URL('../.env',import.meta.url);
   const env=await readFile(envUrl,'utf8');
-  if(!/^JWT_SECRET\s*=/m.test(env)) await appendFile(envUrl,`\nJWT_SECRET=${randomBytes(48).toString('hex')}\n`);
+  const match=env.match(/^JWT_SECRET[^\S\r\n]*=[^\S\r\n]*([^\r\n]*)/m);
+  if(!match || !match[1].trim() || ['""',"''"].includes(match[1].trim())) {
+    const entry=`JWT_SECRET=${randomBytes(48).toString('hex')}`;
+    await writeFile(envUrl,match?env.replace(/^JWT_SECRET[^\r\n]*/m,entry):env+`\n${entry}\n`);
+  }
   console.log('Tabla Usuario creada y configuración JWT preparada. No se muestran secretos.');
 } finally {await pool.end();}

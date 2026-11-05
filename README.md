@@ -1,50 +1,118 @@
 # Dulce Encanto
 
-Sistema de gestión de inventario, ventas y compras para una cadena ficticia de pastelerías de Costa Rica.
+Sistema académico de inventario, ventas, recetas y compras para una cadena ficticia de pastelerías de Costa Rica. Día 2: Node.js, Express, React, MySQL y autenticación JWT, sin roles diferenciados.
 
-## Estructura
-- backend/src/models: acceso a datos.
-- backend/src/controllers: lógica CRUD.
-- backend/src/routes: rutas API.
-- backend/src/config: conexión MySQL.
-- frontend/src/components: componentes React.
-- frontend/src/pages: vistas.
-- frontend/src/services: llamadas API.
-- database/dulce_encanto.sql: 15 tablas relacionadas.
+## Requisitos
 
-## Estado
-Backend Express con conexión MySQL y CRUD de las 15 entidades implementados. Probado en MySQL 8.0.46 en una instancia aislada; la conexión a la instalación personal requiere configurar backend/.env. Interfaz React implementada; ver frontend/README.md para ejecutarla. Se requiere MySQL 8.0.16 o posterior para aplicar CHECK.
+- Node.js 22 y npm disponibles en la terminal.
+- MySQL 8.0.16 o posterior, iniciado.
+- Un usuario MySQL con permiso para crear la base y tablas durante la instalación.
 
-## Ejecutar el servidor
-
-Usar Node.js 22. Desde la carpeta backend:
+## 1. Descargar
 
 ```sh
+git clone --branch codex/dulce-encanto https://github.com/biancarobleshurtado27/Dulce-Encanto.git
+cd Dulce-Encanto
+```
+
+## 2. Configurar backend
+
+```sh
+cd backend
 npm ci
+```
+
+Copiar .env.example a .env y completar DB_USER y DB_PASSWORD con los datos privados de tu MySQL.
+
+| Variable | Configuración |
+|---|---|
+| PORT | 3001, para coincidir con el proxy del frontend. |
+| DB_HOST | localhost o el servidor MySQL correspondiente. |
+| DB_PORT | Normalmente 3306. |
+| DB_NAME | dulce_encanto. |
+| DB_USER / DB_PASSWORD | Credenciales privadas de MySQL. |
+| FRONTEND_ORIGIN | Orígenes React permitidos por CORS. |
+| JWT_SECRET | Clave aleatoria privada de al menos 32 bytes; la migración la genera si está vacía o no existe. |
+
+No subir .env, contraseñas ni tokens al repositorio. El ejemplo no contiene secretos reales.
+
+## 3. Crear o actualizar la base
+
+En una instalación nueva, desde backend:
+
+```sh
+npm run db:init
+node --env-file=.env scripts/migrate-auth.js
+```
+
+El primer comando crea las 15 tablas empresariales y se detiene si encuentra tablas existentes, para conservar tus datos. El segundo agrega Usuario y prepara JWT_SECRET. Resultado: 16 tablas.
+
+Si ya tienes la base del día 1, omite db:init y ejecuta únicamente migrate-auth.js. No borres la base existente.
+
+Los archivos SQL están en database/dulce_encanto.sql y database/002_usuario.sql. Si los ejecutas manualmente en Workbench, selecciona dulce_encanto antes de ejecutar 002_usuario.sql y configura también JWT_SECRET.
+
+## 4. Ejecutar
+
+Primera terminal, dentro de backend:
+
+```sh
 npm start
 ```
 
-Para reiniciar automáticamente al editar: `npm run dev`.
-Opcionalmente copiar backend/.env.example a backend/.env para cambiar PORT.
-El servidor escucha localmente en http://localhost:3000.
+Para reinicio automático: npm run dev.
 
-- GET /: identificación del servicio (200).
-- GET /api/salud: estado del servidor (200); no comprueba MySQL.
-- Rutas inexistentes: respuesta JSON con estado 404.
-- JSON inválido: respuesta JSON con estado 400.
+Segunda terminal, desde la raíz del proyecto:
 
-Las rutas CRUD, ejemplos, configuración y pruebas se explican en [backend/DOCUMENTACION.md](backend/DOCUMENTACION.md). Se incluye una colección Postman en esa carpeta.
+```sh
+cd frontend
+npm ci
+npm run dev
+```
 
-Los totales y la obligación de incluir detalles se validarán mediante transacciones en el backend. No incluye autenticación.
+Abrir http://localhost:5173/login. Crear una cuenta en /registro e iniciar sesión. Vite redirige /api a http://127.0.0.1:3001; si cambias el puerto del backend, ajustar frontend/vite.config.js.
 
+El JWT permanece en memoria, vence en una hora y se elimina al salir. Al recargar la página o recibir un 401 de una ruta protegida se solicita iniciar sesión nuevamente.
 
+## Funciones y API
 
-## Día 2: autenticación
+Las 15 entidades empresariales tienen crear, listar, consultar por ID, actualizar y eliminar: categorias, productos, sucursales, inventarios, clientes, ventas, detalles-venta, metodos-pago, empleados, proveedores, ingredientes, recetas, detalles-receta, ordenes-compra y detalles-compra.
 
-La regla sin autenticación corresponde únicamente al día 1. Desde el día 2, las rutas empresariales requieren JWT. Ver backend/AUTENTICACION.md e INFORME_JWT_DIA_2.md.
+Cada ruta utiliza GET/POST /api/entidad y GET/PUT/DELETE /api/entidad/:id. Requieren Authorization: Bearer TOKEN. React incluye tablas, búsqueda, formularios, selectores relacionados y eliminación con confirmación.
 
-Para instalar desde cero: configurar backend/.env, ejecutar npm ci en backend, npm run db:init y node --env-file=.env scripts/migrate-auth.js. Luego arrancar el backend. En frontend ejecutar npm ci y npm run dev. Si el backend usa 3000, ajustar el destino del proxy en frontend/vite.config.js; la configuración actual utiliza 3001.
+| Ruta | Acceso | Resultado |
+|---|---|---|
+| POST /api/auth/register | Público | Usuario sin password: 201 o 400. |
+| POST /api/auth/login | Público | Token y usuario: 200, 400 o 401. |
+| GET /api/auth/me | JWT | Perfil: 200 o 401. |
+| GET /api/salud | Público | Estado del servidor; no verifica MySQL. |
+| GET /api/salud/db | JWT | Comprueba MySQL. |
+| GET /api/entidades | JWT | Campos para los formularios. |
 
-El frontend se abre en http://localhost:5173/login. Crear la cuenta en /registro. Las contraseñas se guardan como hash; JWT_SECRET nunca se comparte con React. La sesión dura una hora y se pierde al recargar porque el token se conserva en memoria.
+Las ventas, recetas y órdenes se guardan con detalles en transacciones. Los totales se calculan desde los detalles. Las relaciones y valores únicos se validan. No se eliminan maestros referenciados.
 
-El diagrama actualizado está en diagramas/dulce-encanto-dia-2.png y .svg. La colección backend/Dulce-Encanto.postman_collection.json incluye 90 solicitudes y 239 comprobaciones aprobadas. Ver backend/POSTMAN_DIA_2.md antes de ejecutarla: usar una base aislada para pruebas.
+Contraseñas: hash bcrypt, costo 12, mínimo 8 caracteres y máximo 72 bytes UTF-8. JWT: HS256, una hora, emisor y destinatario verificados. Los hashes no se devuelven y JWT_SECRET no se envía a React. Fuera del desarrollo local se necesita HTTPS.
+
+## Pruebas y demostración
+
+- [Colección Postman](backend/Dulce-Encanto.postman_collection.json): 90 solicitudes y 239 comprobaciones aprobadas, incluidos 400, 401, 404 y 409. Leer [instrucciones](backend/POSTMAN_DIA_2.md). Ejecutar sobre una base aislada.
+- Backend: npm test, desde backend. Configurar RUN_DB_TESTS=1 y DB_* para una base de pruebas con 16 tablas. Nunca usar datos personales o de producción. Las pruebas generan sus propios usuarios y claves de prueba.
+- Frontend: npm run build, desde frontend.
+- Datos ficticios: con el backend encendido y API_TOKEN temporal con un JWT válido, ejecutar node scripts/demo.js desde backend. API_URL permite otro destino. No guardar el JWT en el repositorio.
+
+Se verificaron las suites de autenticación y los 15 CRUD con JWT en MySQL aislado, la colección Postman y la compilación React. En Chrome se comprobó el panel autenticado, consulta de venta, cierre de sesión y nuevo login. La usuaria realizó el registro. No se guardó manualmente un registro desde cada formulario.
+
+## Entregables y estructura
+
+- [Investigación JWT y fuentes](INFORME_JWT_DIA_2.md).
+- [Diagrama PNG](diagramas/dulce-encanto-dia-2.png), [SVG](diagramas/dulce-encanto-dia-2.svg) y [Mermaid](diagramas/dulce-encanto-dia-2.mmd).
+- [Requerimientos del día 2](REQUERIMIENTOS_DIA_2.md).
+- [Guía de demostración](GUIA_DEMOSTRACION.md).
+- backend/src: config, models, controllers, routes, middlewares.
+- frontend/src: components, context, pages, services.
+- database: esquema empresarial y migración Usuario.
+
+Las entidades empresariales comparten un controlador CRUD reutilizable y una lista cerrada de tablas. Usuario tiene modelo, controlador y rutas separados. React comparte una vista de gestión entre las entidades, con metadatos de la API.
+
+## Alcance
+
+El inventario se administra por su CRUD; las ventas no descuentan existencias automáticamente. No se incluyen lotes, vencimientos, inventario de ingredientes, roles, recuperación de contraseña ni refresh tokens. Al vencer el token se inicia sesión otra vez. Cerrar sesión no revoca una copia del JWT en el servidor; esa copia vence según su expiración.

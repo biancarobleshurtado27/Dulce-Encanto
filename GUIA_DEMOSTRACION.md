@@ -1,6 +1,6 @@
 # Demostración de Dulce Encanto
 
-Todos los datos precargados son ficticios. Abrir http://localhost:5173 con ambos servidores encendidos.
+Todos los datos precargados son ficticios. Abrir http://localhost:5173/login con ambos servidores encendidos e iniciar sesión. Desde el día 2, la consulta y administración de datos requiere una cuenta registrada.
 
 ## Recorrido sugerido para presentar
 
@@ -18,7 +18,7 @@ El inventario se administra independientemente: las ventas no descuentan existen
 
 ## Cargar datos en otra instalación
 
-Con el esquema creado y el backend encendido en 3001, ejecutar desde backend:
+Con las 16 tablas creadas, el backend encendido en 3001 y API_TOKEN configurado temporalmente con un JWT válido obtenido mediante login, ejecutar desde backend:
 
 ```sh
 node scripts/demo.js
