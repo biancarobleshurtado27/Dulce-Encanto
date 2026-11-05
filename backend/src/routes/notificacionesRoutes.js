@@ -1,0 +1,10 @@
+import {Router} from 'express';
+import {pool} from '../config/database.js';
+import {alertSnapshot,mailStatus,generateReport,sendReport} from '../services/notificaciones.js';
+const router=Router();
+router.get('/estado',(_req,res)=>res.json(mailStatus()));
+router.get('/',async(_req,res,next)=>{try{res.json(await alertSnapshot());}catch(error){next(error);}});
+router.get('/envios',async(_req,res,next)=>{try{const [rows]=await pool.query('SELECT id,tipo,estado,detalle,fecha FROM notificacion_envio ORDER BY id DESC LIMIT 20');res.json(rows);}catch(error){next(error);}});
+router.post('/informe',async(_req,res,next)=>{try{const report=await generateReport();res.set({'Content-Type':'application/pdf','Content-Disposition':'attachment; filename="Dulce-Encanto-Informe-Alertas.pdf"'}).send(report.pdf);}catch(error){next(error);}});
+router.post('/enviar',async(_req,res,next)=>{try{res.json(await sendReport('manual'));}catch(error){next(error);}});
+export default router;

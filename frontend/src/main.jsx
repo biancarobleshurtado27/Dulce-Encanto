@@ -32,3 +32,5 @@ import './tema.css';
 
 import './asistente.css';
 
+
+import './notificaciones.css';

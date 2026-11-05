@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS asistente_turno (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ usuario_id INT NOT NULL,
+ pregunta TEXT NOT NULL,
+ respuesta JSON NOT NULL,
+ fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ INDEX idx_asistente_usuario (usuario_id,id),
+ FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
