@@ -71,7 +71,7 @@ npm run dev
 
 Abrir http://localhost:5173/login. Crear una cuenta en /registro e iniciar sesión. Vite redirige /api a http://127.0.0.1:3001; si cambias el puerto del backend, ajustar frontend/vite.config.js.
 
-El JWT permanece en memoria, vence en una hora y se elimina al salir. Al recargar la página o recibir un 401 de una ruta protegida se solicita iniciar sesión nuevamente.
+El JWT se conserva en sessionStorage de la pestaña y vence a los 30 minutos desde el login. Recargar no renueva ese plazo: se valida el token consultando el perfil antes de mostrar el panel. Cerrar sesión, vencer el plazo o recibir 401 elimina la sesión. Los registros confirmados con Guardar permanecen en MySQL; los formularios sin guardar no se recuperan al recargar.
 
 ## Funciones y API
 
@@ -90,7 +90,7 @@ Cada ruta utiliza GET/POST /api/entidad y GET/PUT/DELETE /api/entidad/:id. Requi
 
 Las ventas, recetas y órdenes se guardan con detalles en transacciones. Los totales se calculan desde los detalles. Las relaciones y valores únicos se validan. No se eliminan maestros referenciados.
 
-Contraseñas: hash bcrypt, costo 12, mínimo 8 caracteres y máximo 72 bytes UTF-8. JWT: HS256, una hora, emisor y destinatario verificados. Los hashes no se devuelven y JWT_SECRET no se envía a React. Fuera del desarrollo local se necesita HTTPS.
+Contraseñas: hash bcrypt, costo 12, mínimo 8 caracteres y máximo 72 bytes UTF-8. JWT: HS256, 30 minutos, emisor y destinatario verificados. Los hashes no se devuelven y JWT_SECRET no se envía a React. Fuera del desarrollo local se necesita HTTPS.
 
 ## Pruebas y demostración
 
@@ -116,4 +116,6 @@ Cada entidad empresarial tiene un archivo de modelo, controlador y rutas en back
 ## Alcance
 
 El inventario se administra por su CRUD; las ventas no descuentan existencias automáticamente. No se incluyen lotes, vencimientos, inventario de ingredientes, roles, recuperación de contraseña ni refresh tokens. Al vencer el token se inicia sesión otra vez. Cerrar sesión no revoca una copia del JWT en el servidor; esa copia vence según su expiración.
+
+
 

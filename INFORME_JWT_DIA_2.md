@@ -10,11 +10,11 @@ Se usarán sub (identificador del usuario), iat (emisión), exp (expiración), i
 
 ## 2. Generación y verificación en Express
 
-La biblioteca jsonwebtoken permite emitir un token con sign y comprobarlo con verify. Se definirá HS256 y una duración de una hora. El middleware verificará explícitamente algoritmo, emisor, destinatario y expiración. decode solo interpreta el contenido y no autentica al remitente; no debe usarse para conceder acceso. Los errores de firma o vencimiento se traducirán a 401. [2]
+La biblioteca jsonwebtoken permite emitir un token con sign y comprobarlo con verify. Se definirá HS256 y una duración de 30 minutos. El middleware verificará explícitamente algoritmo, emisor, destinatario y expiración. decode solo interpreta el contenido y no autentica al remitente; no debe usarse para conceder acceso. Los errores de firma o vencimiento se traducirán a 401. [2]
 
 ## 3. Expiración y renovación
 
-Un access token tiene duración limitada. Un refresh token permite obtener nuevos access tokens mediante un flujo separado, sin volver a escribir la contraseña; también requiere almacenamiento, revocación y protección adecuados. Para este proyecto se decide no implementar refresh tokens: al vencer la hora, React borrará la sesión y solicitará iniciar sesión de nuevo. Esta decisión cumple el alcance académico y evita añadir un mecanismo de renovación que el documento no exige implementar. [6]
+Un access token tiene duración limitada. Un refresh token permite obtener nuevos access tokens mediante un flujo separado, sin volver a escribir la contraseña; también requiere almacenamiento, revocación y protección adecuados. Para este proyecto se decide no implementar refresh tokens: al vencer los 30 minutos, React borrará la sesión y solicitará iniciar sesión de nuevo. Esta decisión cumple el alcance académico y evita añadir un mecanismo de renovación que el documento no exige implementar. [6]
 
 Cerrar sesión borrará el token del navegador. Esto no revoca por sí solo una copia robada de un JWT: esta podría funcionar hasta su expiración. La revocación inmediata requeriría un mecanismo adicional del servidor.
 
@@ -56,3 +56,7 @@ JWT_SECRET será aleatorio, permanecerá en backend/.env y nunca se enviará a R
 4. OWASP, Password Storage Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
 5. MDN, Using HTTP cookies: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies
 6. Auth0, Refresh Tokens: https://auth0.com/docs/secure/tokens/refresh-tokens
+
+
+## Actualización de la decisión de sesión
+Por solicitud de la usuaria, el token se conserva ahora en sessionStorage para mantener la sesión al recargar la misma pestaña. El plazo es de 30 minutos desde el inicio de sesión y no se renueva al actualizar. El frontend valida el perfil al restaurar la sesión y el backend limita la antigüedad del JWT a 30 minutos, incluso para tokens anteriores. SessionStorage es accesible desde JavaScript y no elimina el riesgo de extracción por XSS explicado en este informe. No se persisten contraseñas. Esta decisión sustituye la propuesta inicial de almacenamiento exclusivamente en memoria.

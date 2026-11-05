@@ -39,11 +39,13 @@ test('Registro, login, perfil y protección de contraseñas',async()=>{
      }
    }
    const payload=jwt.verify(result.token,process.env.JWT_SECRET,{algorithms:['HS256'],issuer:tokenOptions.issuer,audience:tokenOptions.audience});
-   assert.equal(payload.exp-payload.iat,3600);
+   assert.equal(payload.exp-payload.iat,1800);
    await call('/me','GET',null,401);
    await call('/me','GET',null,401,'invalido');
    const expired=jwt.sign({},process.env.JWT_SECRET,{...tokenOptions,subject:String(user.id),expiresIn:-1});
    await call('/me','GET',null,401,expired);
+   const tooOld=jwt.sign({iat:Math.floor(Date.now()/1000)-1860},process.env.JWT_SECRET,{...tokenOptions,subject:String(user.id),expiresIn:'1h'});
+   await call('/me','GET',null,401,tooOld);
    const wrong=jwt.sign({},'otra-clave',{...tokenOptions,subject:String(user.id)});
    await call('/me','GET',null,401,wrong);
    const me=await call('/me','GET',null,200,result.token);assert.equal(me.id,user.id);

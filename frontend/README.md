@@ -22,3 +22,6 @@ No hay inicio de sesión. El inventario se administra por separado y las ventas 
 ## Resultado de la revisión visual con autenticación
 
 Se comprobó en Chrome la sesión creada por la usuaria, la consulta de una venta con sus detalles, el cierre de sesión con redirección a /login y el regreso al catálogo mediante el formulario de login. Se conservó la sesión activa al terminar. No se modificaron registros empresariales en esta revisión.
+
+
+Sesión actual: se conserva en sessionStorage durante 30 minutos desde el login. Recargar restaura la sesión con validación del perfil y consulta nuevamente los registros de MySQL; no guarda borradores de formularios.

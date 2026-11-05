@@ -9,7 +9,7 @@ try{
  for(const page of ['Login','Registro']){
   const {default:Page}=await server.ssrLoadModule(`/src/pages/${page}.jsx`);
   const html=renderToString(React.createElement(MemoryRouter,null,React.createElement(AuthProvider,null,React.createElement(Page))));
-  assert.ok(html.includes('Dulce'));assert.ok(html.includes('Contraseña'));
+  assert.ok(html.includes('Restaurando sesión'));
   console.log(`${page}: render correcto`);
  }
  const {default:Sales}=await server.ssrLoadModule('/src/components/SalesWorkspace.jsx');

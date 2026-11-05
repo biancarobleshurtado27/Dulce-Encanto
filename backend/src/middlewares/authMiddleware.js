@@ -8,7 +8,7 @@ export async function authMiddleware(req,res,next) {
   if(!match) return res.status(401).json({error:'No autorizado'});
   let payload;
   try {
-    payload=jwt.verify(match[1],secret,{algorithms:['HS256'],issuer:'dulce-encanto',audience:'dulce-encanto-web'});
+    payload=jwt.verify(match[1],secret,{algorithms:['HS256'],issuer:'dulce-encanto',audience:'dulce-encanto-web',maxAge:'30m'});
     if(typeof payload.sub!=='string'||!/^\d+$/.test(payload.sub)) throw new Error('Identidad inválida');
   } catch { return res.status(401).json({error:'No autorizado'}); }
   try {
