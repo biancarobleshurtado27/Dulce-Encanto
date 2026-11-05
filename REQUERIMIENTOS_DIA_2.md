@@ -27,3 +27,5 @@ El día 2 reemplaza la regla sin autenticación del día 1. Fecha límite indica
 
 No se exigen roles ni permisos. La sección específica de Usuario exige registro, login y perfil; los cinco endpoints CRUD se mantienen en las entidades empresariales.
 
+
+- [x] Archivos de modelo, controlador, rutas, página y servicio por entidad; 15 URLs protegidas y lógica común reutilizable. Pruebas backend y compilación repetidas tras reorganizar.

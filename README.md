@@ -111,8 +111,9 @@ Se verificaron las suites de autenticación y los 15 CRUD con JWT en MySQL aisla
 - frontend/src: components, context, pages, services.
 - database: esquema empresarial y migración Usuario.
 
-Las entidades empresariales comparten un controlador CRUD reutilizable y una lista cerrada de tablas. Usuario tiene modelo, controlador y rutas separados. React comparte una vista de gestión entre las entidades, con metadatos de la API.
+Cada entidad empresarial tiene un archivo de modelo, controlador y rutas en backend, además de una página con URL propia y un servicio en frontend. Los controladores usan una fábrica CRUD común y las páginas reutilizan GestionEntidad.jsx. Usuario mantiene sus archivos de autenticación separados. Así se conserva la organización por entidad sin duplicar validaciones ni formularios.
 
 ## Alcance
 
 El inventario se administra por su CRUD; las ventas no descuentan existencias automáticamente. No se incluyen lotes, vencimientos, inventario de ingredientes, roles, recuperación de contraseña ni refresh tokens. Al vencer el token se inicia sesión otra vez. Cerrar sesión no revoca una copia del JWT en el servidor; esa copia vence según su expiración.
+

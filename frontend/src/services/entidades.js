@@ -1,0 +1,16 @@
+import * as Categorias from './CategoriasService';
+import * as Productos from './ProductosService';
+import * as Sucursales from './SucursalesService';
+import * as Inventarios from './InventariosService';
+import * as Clientes from './ClientesService';
+import * as Ventas from './VentasService';
+import * as DetallesVenta from './DetallesVentaService';
+import * as MetodosPago from './MetodosPagoService';
+import * as Empleados from './EmpleadosService';
+import * as Proveedores from './ProveedoresService';
+import * as Ingredientes from './IngredientesService';
+import * as Recetas from './RecetasService';
+import * as DetallesReceta from './DetallesRecetaService';
+import * as OrdenesCompra from './OrdenesCompraService';
+import * as DetallesCompra from './DetallesCompraService';
+export const servicios={'categorias':Categorias,'productos':Productos,'sucursales':Sucursales,'inventarios':Inventarios,'clientes':Clientes,'ventas':Ventas,'detalles-venta':DetallesVenta,'metodos-pago':MetodosPago,'empleados':Empleados,'proveedores':Proveedores,'ingredientes':Ingredientes,'recetas':Recetas,'detalles-receta':DetallesReceta,'ordenes-compra':OrdenesCompra,'detalles-compra':DetallesCompra};

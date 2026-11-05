@@ -1,0 +1,3 @@
+import React from 'react';
+import GestionEntidad from './GestionEntidad';
+export default function Ingredientes(){return <GestionEntidad entidad="ingredientes"/>;}
