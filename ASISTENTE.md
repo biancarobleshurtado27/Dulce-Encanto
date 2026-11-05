@@ -1,6 +1,6 @@
 # Asistente: preparación de integración multiagente
 
-Estado: adaptador DeepSeek y coordinador multiagente implementados. La prueba real de conexión devolvió 401 (clave no aceptada). Falta configurar una clave válida para probar respuestas reales. El modo local funciona sin enviar consultas fuera del sistema.
+Estado: adaptador DeepSeek y coordinador multiagente implementados. Conexión real verificada con una clave aceptada. La usuaria autorizó explícitamente enviar preguntas y datos empresariales necesarios a DeepSeek, excluyendo contraseñas y datos de contacto personales. Se verificaron consultas reales de precio del pastel de chocolate e inventario en mínimos; los campos enviados no incluyen password, correo, teléfono ni identificación. El modo local funciona sin enviar consultas fuera del sistema.
 
 ## Arquitectura preparada
 
@@ -22,6 +22,7 @@ Guardar DEEPSEEK_API_KEY en backend/.env y DEEPSEEK_MODEL=deepseek-flash. Reinic
 
 El modo IA envía la pregunta y los resultados de las herramientas seleccionadas a DeepSeek. No se incluyen contraseñas, hashes, la tabla Usuario, correos ni teléfonos de clientes o empleados. Se envían únicamente resultados de productos, sucursales, inventario, recetas, nombres de proveedores y resúmenes de transacciones según la consulta. No hay memoria persistente ni modificación de registros mediante IA. Una consulta por usuario a la vez; máximo tres especialistas, respuestas limitadas y espera por llamada de hasta 35 segundos.
 
-Las pruebas simuladas comprobaron coordinación, selección de herramientas permitidas, síntesis, validaciones y errores del proveedor. No prueban la calidad de respuestas reales: esa verificación está pendiente de una clave aceptada.
+Las pruebas simuladas comprobaron coordinación, selección de herramientas permitidas, síntesis, validaciones y errores del proveedor. Además se verificó el flujo real: coordinador, herramienta de MySQL, especialista y síntesis. Los resultados siguen sujetos al alcance y límite de cada herramienta; el modelo puede equivocarse y se muestran los registros originales para contrastarlo.
 
 Documentación oficial consultada: https://api-docs.deepseek.com/ y https://api-docs.deepseek.com/guides/tool_calls/
+
