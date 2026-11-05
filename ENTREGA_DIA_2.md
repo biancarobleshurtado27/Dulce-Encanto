@@ -12,7 +12,7 @@ El documento de Google del caso empresarial corresponde al día 1. Adjuntar el d
 
 ## Evidencia verificada
 
-- MySQL personal: 16 tablas después de agregar Usuario; datos empresariales conservados.
+- Modelo académico: 16 tablas con Usuario y tres auxiliares de memoria y notificaciones (19 en total); datos empresariales conservados.
 - Suite de autenticación y los 15 CRUD con JWT aprobados sobre MySQL aislado.
 - Postman/Newman: 90 solicitudes, 239 comprobaciones, sin fallos. Incluye 400, 401, 404 y 409.
 - Compilación de producción del frontend aprobada.
@@ -31,3 +31,12 @@ El documento de Google del caso empresarial corresponde al día 1. Adjuntar el d
 7. Cerrar sesión y comprobar el regreso al login.
 
 Las limitaciones de alcance están documentadas en README. La prueba visual no equivale a guardar manualmente un registro de cada entidad; esas operaciones se verificaron con las pruebas HTTP automatizadas.
+
+## Ampliaciones finales
+
+- [x] Memoria del asistente por usuario e informes PDF con DeepSeek.
+- [x] Autenticación Gmail y aceptación SMTP de dos informes reales comprobadas; avisos automáticos activados en la instalación local.
+- [x] Instrucciones de instalación actualizadas con las tres migraciones.
+- [x] Código React organizado en components, pages, services, context y routes.
+
+Al entregar, usar la rama codex/dulce-encanto o el ZIP actualizado. No incluir .env. Adjuntar manualmente el diagrama al documento académico.

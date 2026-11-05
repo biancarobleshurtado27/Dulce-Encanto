@@ -1,36 +1,22 @@
-import AssistantWidget from './components/AssistantWidget';
 import React from 'react';
 import {createRoot} from 'react-dom/client';
-import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import {AuthProvider} from './context/AuthContext';
-import RutaProtegida from './components/RutaProtegida';
-import Login from './pages/Login';
-import Registro from './pages/Registro';
+import AssistantWidget from './components/AssistantWidget';
+import AppRoutes from './routes/AppRoutes';
 import './style.css';
-import Categorias from './pages/Categorias';
-import Productos from './pages/Productos';
-import Sucursales from './pages/Sucursales';
-import Inventarios from './pages/Inventarios';
-import Clientes from './pages/Clientes';
-import Ventas from './pages/Ventas';
-import DetallesVenta from './pages/DetallesVenta';
-import MetodosPago from './pages/MetodosPago';
-import Empleados from './pages/Empleados';
-import Proveedores from './pages/Proveedores';
-import Ingredientes from './pages/Ingredientes';
-import Recetas from './pages/Recetas';
-import DetallesReceta from './pages/DetallesReceta';
-import OrdenesCompra from './pages/OrdenesCompra';
-import DetallesCompra from './pages/DetallesCompra';
-createRoot(document.getElementById('root')).render(<BrowserRouter><AuthProvider><AssistantWidget/><Routes><Route path="/login" element={<Login/>}/><Route path="/registro" element={<Registro/>}/><Route path="/categorias" element={<RutaProtegida><Categorias/></RutaProtegida>}/><Route path="/productos" element={<RutaProtegida><Productos/></RutaProtegida>}/><Route path="/sucursales" element={<RutaProtegida><Sucursales/></RutaProtegida>}/><Route path="/inventarios" element={<RutaProtegida><Inventarios/></RutaProtegida>}/><Route path="/clientes" element={<RutaProtegida><Clientes/></RutaProtegida>}/><Route path="/ventas" element={<RutaProtegida><Ventas/></RutaProtegida>}/><Route path="/detalles-venta" element={<RutaProtegida><DetallesVenta/></RutaProtegida>}/><Route path="/metodos-pago" element={<RutaProtegida><MetodosPago/></RutaProtegida>}/><Route path="/empleados" element={<RutaProtegida><Empleados/></RutaProtegida>}/><Route path="/proveedores" element={<RutaProtegida><Proveedores/></RutaProtegida>}/><Route path="/ingredientes" element={<RutaProtegida><Ingredientes/></RutaProtegida>}/><Route path="/recetas" element={<RutaProtegida><Recetas/></RutaProtegida>}/><Route path="/detalles-receta" element={<RutaProtegida><DetallesReceta/></RutaProtegida>}/><Route path="/ordenes-compra" element={<RutaProtegida><OrdenesCompra/></RutaProtegida>}/><Route path="/detalles-compra" element={<RutaProtegida><DetallesCompra/></RutaProtegida>}/><Route path="*" element={<Navigate to="/productos" replace/>}/></Routes></AuthProvider></BrowserRouter>);
-
 import './atelier.css';
 import './legibilidad.css';
 import './interacciones.css';
-
 import './tema.css';
-
 import './asistente.css';
-
-
 import './notificaciones.css';
+
+createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+    <AuthProvider>
+      <AssistantWidget/>
+      <AppRoutes/>
+    </AuthProvider>
+  </BrowserRouter>
+);

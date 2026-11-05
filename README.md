@@ -43,11 +43,13 @@ En una instalación nueva, desde backend:
 ```sh
 npm run db:init
 node --env-file=.env scripts/migrate-auth.js
+node --env-file=.env scripts/migrate-memory.js
+node --env-file=.env scripts/migrate-notifications.js
 ```
 
-El primer comando crea las 15 tablas empresariales y se detiene si encuentra tablas existentes, para conservar tus datos. El segundo agrega Usuario y prepara JWT_SECRET. Resultado: 16 tablas.
+El primer comando crea las 15 tablas empresariales y se detiene si encuentra tablas existentes, para conservar tus datos. El segundo agrega Usuario y prepara JWT_SECRET. Las dos migraciones finales agregan memoria del asistente y registro de notificaciones. Resultado actual: 19 tablas (16 del modelo académico y tres auxiliares).
 
-Si ya tienes la base del día 1, omite db:init y ejecuta únicamente migrate-auth.js. No borres la base existente.
+Si ya tienes la base del día 1, omite db:init y ejecuta las tres migraciones (auth, memory y notifications). No borres la base existente.
 
 Los archivos SQL están en database/dulce_encanto.sql y database/002_usuario.sql. Si los ejecutas manualmente en Workbench, selecciona dulce_encanto antes de ejecutar 002_usuario.sql y configura también JWT_SECRET.
 
@@ -108,10 +110,14 @@ Se verificaron las suites de autenticación y los 15 CRUD con JWT en MySQL aisla
 - [Requerimientos del día 2](REQUERIMIENTOS_DIA_2.md).
 - [Guía de demostración](GUIA_DEMOSTRACION.md).
 - backend/src: config, models, controllers, routes, middlewares.
-- frontend/src: components, context, pages, services.
+- frontend/src: components, context, pages, routes, services. Las rutas de React Router están en routes/AppRoutes.jsx; main.jsx inicia la aplicación.
 - database: esquema empresarial y migración Usuario.
 
 Cada entidad empresarial tiene un archivo de modelo, controlador y rutas en backend, además de una página con URL propia y un servicio en frontend. Los controladores usan una fábrica CRUD común y las páginas reutilizan GestionEntidad.jsx. Usuario mantiene sus archivos de autenticación separados. Así se conserva la organización por entidad sin duplicar validaciones ni formularios.
+
+## Asistente y correo
+
+El asistente multiagente consulta datos empresariales y conserva historial por usuario. El panel Alertas permite consultar existencias en mínimos y compras pendientes, generar un PDF con DeepSeek y enviarlo por correo. Configuración privada, migraciones y horarios en [Memoria y correos](MEMORIA_Y_CORREOS.md); configuración del proveedor en [Asistente](ASISTENTE.md). Cada instalación debe configurar sus propias claves en .env. Los avisos automáticos requieren el backend encendido.
 
 ## Alcance
 

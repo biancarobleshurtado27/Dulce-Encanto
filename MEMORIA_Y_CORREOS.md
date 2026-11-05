@@ -23,7 +23,7 @@ El PDF contiene fecha, motivo, explicación/recomendaciones de DeepSeek y detall
 
 ## Configurar correo
 
-Completar únicamente en backend/.env: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, ALERT_FROM y ALERT_RECIPIENT. La cuenta emisora y su autenticación están pendientes de confirmar; no se han enviado correos reales. Nunca usar una contraseña personal ordinaria en el código ni subir credenciales al repositorio.
+Completar únicamente en backend/.env: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, ALERT_FROM y ALERT_RECIPIENT. Para Gmail, usar una contraseña de aplicación de la cuenta con verificación en dos pasos. Cada instalación necesita sus propias credenciales. Nunca usar una contraseña personal ordinaria en el código ni subir credenciales al repositorio.
 
 Una vez verificada la cuenta, ALERT_EMAIL_ENABLED=true activa el monitoreo automático. ALERT_DAILY_HOUR=08 configura el resumen a las 8:00 a. m. de Costa Rica; puede cambiarse a otra hora entre 00 y 23. Reiniciar backend tras cambiar .env.
 
@@ -37,4 +37,4 @@ El monitoreo funciona solo mientras el backend esté encendido y conectado. Para
 
 ## Verificación
 
-Pruebas en MySQL aislado: memoria persistida, aislamiento de cuentas, omisión de credenciales y PDF válido. Se inspeccionó visualmente un PDF ficticio de ejemplo. El frontend compiló. No se ha probado la entrega SMTP porque faltan los datos de la cuenta emisora.
+Pruebas en MySQL aislado: memoria persistida, aislamiento de cuentas, omisión de credenciales y PDF válido. Se inspeccionó visualmente un PDF ficticio de ejemplo. El frontend compiló. El 5 de noviembre de 2026 se verificó la autenticación SMTP de Gmail y su aceptación de dos correos reales con PDF: prueba manual y primer aviso automático. Ambos quedaron registrados como enviados en MySQL. Se activó el monitoreo y el resumen de las 08:00 de Costa Rica en la instalación local. La ubicación final en la bandeja de entrada debe comprobarse en Gmail.
