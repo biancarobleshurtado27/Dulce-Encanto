@@ -1,0 +1,156 @@
+erDiagram
+  categoria ||--o{ producto : id_categoria
+  producto ||--o{ inventario : id_producto
+  sucursal ||--o{ inventario : id_sucursal
+  sucursal o|--o{ empleado : id_sucursal
+  sucursal ||--o{ venta : id_sucursal
+  cliente o|--o{ venta : id_cliente
+  empleado ||--o{ venta : id_empleado
+  metodo_pago ||--o{ venta : id_metodo_pago
+  venta ||--|{ detalle_venta : id_venta
+  producto ||--o{ detalle_venta : id_producto
+  producto ||--o| receta : id_producto
+  receta ||--|{ detalle_receta : id_receta
+  ingrediente ||--o{ detalle_receta : id_ingrediente
+  proveedor ||--o{ orden_compra : id_proveedor
+  empleado ||--o{ orden_compra : id_empleado
+  orden_compra ||--|{ detalle_compra : id_orden_compra
+  ingrediente ||--o{ detalle_compra : id_ingrediente
+  categoria {
+    INT id_categoria PK
+    VARCHAR_60_ nombre UK
+    TEXT descripcion
+    BOOLEAN activo
+  }
+  producto {
+    INT id_producto PK
+    INT id_categoria FK
+    VARCHAR_30_ codigo UK
+    VARCHAR_100_ nombre
+    TEXT descripcion
+    DECIMAL_12_2_ precio_venta
+    INT vida_util_dias
+    BOOLEAN activo
+  }
+  sucursal {
+    INT id_sucursal PK
+    VARCHAR_100_ nombre
+    VARCHAR_20_ provincia
+    VARCHAR_60_ canton
+    VARCHAR_250_ direccion
+    VARCHAR_20_ telefono
+    VARCHAR_120_ correo
+    BOOLEAN activa
+  }
+  inventario {
+    INT id_inventario PK
+    INT id_producto FK
+    INT id_sucursal FK
+    INT cantidad_disponible
+    INT stock_minimo
+    DATETIME fecha_actualizacion
+  }
+  cliente {
+    INT id_cliente PK
+    VARCHAR_10_ tipo_cliente
+    VARCHAR_150_ nombre
+    VARCHAR_30_ identificacion UK
+    VARCHAR_20_ telefono
+    VARCHAR_120_ correo
+    VARCHAR_250_ direccion
+    DATETIME fecha_registro
+  }
+  metodo_pago {
+    INT id_metodo_pago PK
+    VARCHAR_50_ nombre UK
+    VARCHAR_200_ descripcion
+    BOOLEAN activo
+  }
+  empleado {
+    INT id_empleado PK
+    INT id_sucursal FK
+    VARCHAR_30_ identificacion UK
+    VARCHAR_80_ nombres
+    VARCHAR_100_ apellidos
+    VARCHAR_20_ telefono
+    VARCHAR_120_ correo
+    VARCHAR_60_ cargo
+    DATE fecha_contratacion
+    BOOLEAN activo
+  }
+  proveedor {
+    INT id_proveedor PK
+    VARCHAR_150_ nombre
+    VARCHAR_30_ identificacion UK
+    VARCHAR_120_ nombre_contacto
+    VARCHAR_20_ telefono
+    VARCHAR_120_ correo
+    VARCHAR_250_ direccion
+    BOOLEAN activo
+  }
+  ingrediente {
+    INT id_ingrediente PK
+    VARCHAR_100_ nombre UK
+    TEXT descripcion
+    VARCHAR_10_ unidad_medida
+    BOOLEAN activo
+  }
+  venta {
+    INT id_venta PK
+    INT id_sucursal FK
+    INT id_cliente FK
+    INT id_empleado FK
+    INT id_metodo_pago FK
+    DATETIME fecha_venta
+    DECIMAL_12_2_ total
+    VARCHAR_15_ estado
+  }
+  detalle_venta {
+    INT id_detalle_venta PK
+    INT id_venta FK
+    INT id_producto FK
+    INT cantidad
+    DECIMAL_12_2_ precio_unitario
+    DECIMAL_12_2_ subtotal
+  }
+  receta {
+    INT id_receta PK
+    INT id_producto FK
+    VARCHAR_100_ nombre
+    TEXT instrucciones
+    INT rendimiento_unidades
+    INT tiempo_preparacion_minutos
+    DATETIME fecha_actualizacion
+  }
+  detalle_receta {
+    INT id_detalle_receta PK
+    INT id_receta FK
+    INT id_ingrediente FK
+    DECIMAL_12_3_ cantidad
+    VARCHAR_250_ observaciones
+  }
+  orden_compra {
+    INT id_orden_compra PK
+    INT id_proveedor FK
+    INT id_empleado FK
+    DATETIME fecha_orden
+    DATE fecha_entrega_estimada
+    VARCHAR_15_ estado
+    DECIMAL_12_2_ total
+    TEXT observaciones
+  }
+  detalle_compra {
+    INT id_detalle_compra PK
+    INT id_orden_compra FK
+    INT id_ingrediente FK
+    DECIMAL_12_3_ cantidad
+    DECIMAL_12_2_ costo_unitario
+    DECIMAL_12_2_ subtotal
+  }
+  usuario {
+    INT id PK
+    VARCHAR_100_ nombre
+    VARCHAR_120_ correo UK
+    VARCHAR_255_ password "hash bcrypt"
+    DATETIME fechaCreacion
+  }

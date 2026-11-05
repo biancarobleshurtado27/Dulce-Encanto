@@ -1,121 +1,2211 @@
 {
   "info": {
-    "name": "Dulce Encanto API",
+    "name": "Dulce Encanto · Día 2 · Pruebas completas",
+    "description": "Ejecutar en orden en una base de prueba. Crea y elimina únicamente sus propios registros. Registro/login públicos; resto protegido. Variables de token y contraseña son de prueba.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
   },
   "variable": [
     {
       "key": "baseUrl",
       "value": "http://localhost:3001"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "correoPrueba",
+      "value": ""
+    },
+    {
+      "key": "passwordPrueba",
+      "value": "PruebaAcademica2026!"
     }
   ],
   "item": [
     {
-      "name": "Salud MySQL",
-      "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/api/salud/db"
-      }
-    },
-    {
-      "name": "categorias",
+      "name": "01 Autenticación",
       "item": [
         {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/categorias"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/categorias/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
+          "name": "01 Registro",
           "request": {
             "method": "POST",
+            "url": "{{baseUrl}}/api/auth/register",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               }
             ],
-            "url": "{{baseUrl}}/api/categorias",
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
-              "raw": "{\"nombre\":\"Pasteles\"}"
+              "raw": "{\n  \"nombre\": \"Prueba Postman\",\n  \"correo\": \"{{correoPrueba}}\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('runId',Date.now().toString()+'-'+Math.floor(Math.random()*100000));",
+                  "pm.collectionVariables.set('correoPrueba','postman-'+pm.collectionVariables.get('runId')+'@example.com');"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
+          "name": "Correo duplicado: 400",
           "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/categorias/1",
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/register",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               }
             ],
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
-              "raw": "{}"
+              "raw": "{\n  \"nombre\": \"Prueba\",\n  \"correo\": \"{{correoPrueba}}\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400',()=>pm.response.to.have.status(400));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
         },
         {
-          "name": "Eliminar",
+          "name": "Login incorrecto: 401",
           "request": {
-            "method": "DELETE",
-            "url": "{{baseUrl}}/api/categorias/1"
-          }
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"{{correoPrueba}}\",\n  \"password\": \"Incorrecta123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401',()=>pm.response.to.have.status(401));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login y guardar token",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"{{correoPrueba}}\",\n  \"password\": \"{{passwordPrueba}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                  "pm.collectionVariables.set('token',respuesta.token); pm.test('Token recibido',()=>pm.expect(respuesta.token).to.be.a('string')); "
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil actual",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/auth/me",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil sin token: 401",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/auth/me",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401',()=>pm.response.to.have.status(401));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
     {
-      "name": "productos",
+      "name": "02 Crear y consultar las 15 entidades",
       "item": [
         {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/productos"
-          }
+          "name": "categorias",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/categorias",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Categoría {{runId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('categoriasId',respuesta.id_categoria);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/categorias",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/categorias/{{categoriasId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/categorias/{{categoriasId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"descripcion\": \"Editada con Postman\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/productos/1"
-          }
+          "name": "productos",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/productos",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_categoria\": {{categoriasId}},\n  \"codigo\": \"P-{{runId}}\",\n  \"nombre\": \"Pastel de prueba\",\n  \"precio_venta\": 1000,\n  \"vida_util_dias\": 3\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('productosId',respuesta.id_producto);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/productos",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/productos/{{productosId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/productos/{{productosId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"precio_venta\": 1200\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
-          "name": "Crear (completar cuerpo según documentación)",
+          "name": "sucursales",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/sucursales",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Sucursal {{runId}}\",\n  \"provincia\": \"San José\",\n  \"canton\": \"Central\",\n  \"direccion\": \"Ficticia\",\n  \"telefono\": \"00000000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('sucursalesId',respuesta.id_sucursal);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/sucursales",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/sucursales/{{sucursalesId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/sucursales/{{sucursalesId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Sucursal editada {{runId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "inventarios",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/inventarios",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_producto\": {{productosId}},\n  \"id_sucursal\": {{sucursalesId}},\n  \"cantidad_disponible\": 10,\n  \"stock_minimo\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('inventariosId',respuesta.id_inventario);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/inventarios",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/inventarios/{{inventariosId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/inventarios/{{inventariosId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cantidad_disponible\": 12\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "clientes",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/clientes",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tipo_cliente\": \"persona\",\n  \"nombre\": \"Cliente {{runId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('clientesId',respuesta.id_cliente);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/clientes",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/clientes/{{clientesId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/clientes/{{clientesId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"telefono\": \"00000000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "metodos-pago",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/metodos-pago",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Pago {{runId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('metodos-pagoId',respuesta.id_metodo_pago);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/metodos-pago",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/metodos-pago/{{metodos-pagoId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/metodos-pago/{{metodos-pagoId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"descripcion\": \"Prueba\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "empleados",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/empleados",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_sucursal\": {{sucursalesId}},\n  \"identificacion\": \"E-{{runId}}\",\n  \"nombres\": \"Prueba\",\n  \"apellidos\": \"Postman\",\n  \"telefono\": \"00000000\",\n  \"cargo\": \"Ventas\",\n  \"fecha_contratacion\": \"2026-01-01\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('empleadosId',respuesta.id_empleado);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/empleados",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/empleados/{{empleadosId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/empleados/{{empleadosId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cargo\": \"Encargado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "proveedores",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/proveedores",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Proveedor {{runId}}\",\n  \"identificacion\": \"P-{{runId}}\",\n  \"telefono\": \"00000000\",\n  \"direccion\": \"Ficticia\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('proveedoresId',respuesta.id_proveedor);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/proveedores",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/proveedores/{{proveedoresId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/proveedores/{{proveedoresId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre_contacto\": \"Prueba\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ingredientes",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/ingredientes",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Ingrediente {{runId}}\",\n  \"unidad_medida\": \"kg\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('ingredientesId',respuesta.id_ingrediente);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/ingredientes",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/ingredientes/{{ingredientesId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/ingredientes/{{ingredientesId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"descripcion\": \"Prueba\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ingrediente-auxiliar",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/ingredientes",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Auxiliar {{runId}}\",\n  \"unidad_medida\": \"kg\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('ingrediente-auxiliarId',respuesta.id_ingrediente);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/ingredientes",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/ingredientes/{{ingrediente-auxiliarId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ventas",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/ventas",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_sucursal\": {{sucursalesId}},\n  \"id_cliente\": {{clientesId}},\n  \"id_empleado\": {{empleadosId}},\n  \"id_metodo_pago\": {{metodos-pagoId}},\n  \"detalles\": [\n    {\n      \"id_producto\": {{productosId}},\n      \"cantidad\": 2,\n      \"precio_unitario\": 1000\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('ventasId',respuesta.id_venta);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/ventas",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/ventas/{{ventasId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/ventas/{{ventasId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"anulada\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "detalles-venta",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/detalles-venta",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_venta\": {{ventasId}},\n  \"id_producto\": {{productosId}},\n  \"cantidad\": 1,\n  \"precio_unitario\": 1000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('detalles-ventaId',respuesta.id_detalle_venta);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/detalles-venta",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/detalles-venta/{{detalles-ventaId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/detalles-venta/{{detalles-ventaId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cantidad\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "recetas",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/recetas",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_producto\": {{productosId}},\n  \"nombre\": \"Receta {{runId}}\",\n  \"instrucciones\": \"Mezclar\",\n  \"rendimiento_unidades\": 1,\n  \"tiempo_preparacion_minutos\": 30,\n  \"detalles\": [\n    {\n      \"id_ingrediente\": {{ingredientesId}},\n      \"cantidad\": 0.5\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('recetasId',respuesta.id_receta);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/recetas",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/recetas/{{recetasId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/recetas/{{recetasId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Receta editada {{runId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "detalles-receta",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/detalles-receta",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_receta\": {{recetasId}},\n  \"id_ingrediente\": {{ingrediente-auxiliarId}},\n  \"cantidad\": 0.2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('detalles-recetaId',respuesta.id_detalle_receta);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/detalles-receta",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/detalles-receta/{{detalles-recetaId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/detalles-receta/{{detalles-recetaId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cantidad\": 0.3\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ordenes-compra",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/ordenes-compra",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_proveedor\": {{proveedoresId}},\n  \"id_empleado\": {{empleadosId}},\n  \"detalles\": [\n    {\n      \"id_ingrediente\": {{ingredientesId}},\n      \"cantidad\": 2,\n      \"costo_unitario\": 1000\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('ordenes-compraId',respuesta.id_orden_compra);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/ordenes-compra",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/ordenes-compra/{{ordenes-compraId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/ordenes-compra/{{ordenes-compraId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"recibida\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "detalles-compra",
+          "item": [
+            {
+              "name": "Crear",
+              "request": {
+                "method": "POST",
+                "url": "{{baseUrl}}/api/detalles-compra",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_orden_compra\": {{ordenes-compraId}},\n  \"id_ingrediente\": {{ingredientesId}},\n  \"cantidad\": 1,\n  \"costo_unitario\": 500\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 201',()=>pm.response.to.have.status(201));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});",
+                      "pm.collectionVariables.set('detalles-compraId',respuesta.id_detalle_compra);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Listar",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/detalles-compra",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Consultar uno",
+              "request": {
+                "method": "GET",
+                "url": "{{baseUrl}}/api/detalles-compra/{{detalles-compraId}}",
+                "header": []
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Actualizar",
+              "request": {
+                "method": "PUT",
+                "url": "{{baseUrl}}/api/detalles-compra/{{detalles-compraId}}",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cantidad\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Estado 200',()=>pm.response.to.have.status(200));",
+                      "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                      "var respuesta=pm.response.json();",
+                      "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 Errores exigidos",
+      "item": [
+        {
+          "name": "Productos sin token: 401",
           "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "method": "GET",
             "url": "{{baseUrl}}/api/productos",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
+            "header": [],
+            "auth": {
+              "type": "noauth"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401',()=>pm.response.to.have.status(401));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
+          "name": "Validación: 400",
           "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/productos/1",
+            "method": "POST",
+            "url": "{{baseUrl}}/api/productos",
             "header": [
               {
                 "key": "Content-Type",
@@ -124,796 +2214,417 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{}"
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400',()=>pm.response.to.have.status(400));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
         },
         {
-          "name": "Eliminar",
+          "name": "Registro inexistente: 404",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/productos/2147483647",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 404',()=>pm.response.to.have.status(404));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Relación inexistente: 400",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/productos",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_categoria\": 2147483647,\n  \"codigo\": \"ERROR-{{runId}}\",\n  \"nombre\": \"Inválido\",\n  \"precio_venta\": 1,\n  \"vida_util_dias\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400',()=>pm.response.to.have.status(400));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dependencia al eliminar: 409",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/productos/1"
-          }
+            "url": "{{baseUrl}}/api/categorias/{{categoriasId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 409',()=>pm.response.to.have.status(409));",
+                  "pm.test('Respuesta JSON',()=>pm.response.to.be.json);",
+                  "var respuesta=pm.response.json();",
+                  "pm.test('Sin password ni hash',()=>{pm.expect(respuesta).not.to.have.property('password'); if(respuesta.usuario)pm.expect(respuesta.usuario).not.to.have.property('password');});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
     {
-      "name": "sucursales",
+      "name": "04 Eliminar los registros de prueba en orden",
       "item": [
         {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/sucursales"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/sucursales/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{baseUrl}}/api/sucursales",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/sucursales/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar detalles-compra",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/sucursales/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "inventarios",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/inventarios"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/inventarios/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/detalles-compra/{{detalles-compraId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/inventarios",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/inventarios/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar ordenes-compra",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/inventarios/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "clientes",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/clientes"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/clientes/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/ordenes-compra/{{ordenes-compraId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/clientes",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/clientes/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar detalles-receta",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/clientes/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "ventas",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/ventas"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/ventas/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/detalles-receta/{{detalles-recetaId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/ventas",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/ventas/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar recetas",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/ventas/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "detalles-venta",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/detalles-venta"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/detalles-venta/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/recetas/{{recetasId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/detalles-venta",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/detalles-venta/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar detalles-venta",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/detalles-venta/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "metodos-pago",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/metodos-pago"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/metodos-pago/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/detalles-venta/{{detalles-ventaId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/metodos-pago",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/metodos-pago/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar ventas",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/metodos-pago/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "empleados",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/empleados"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/empleados/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/ventas/{{ventasId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/empleados",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/empleados/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar ingrediente-auxiliar",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/empleados/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "proveedores",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/proveedores"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/proveedores/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/ingredientes/{{ingrediente-auxiliarId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/proveedores",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/proveedores/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar ingredientes",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/proveedores/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "ingredientes",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/ingredientes"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/ingredientes/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/ingredientes/{{ingredientesId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/ingredientes",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/ingredientes/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar proveedores",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/ingredientes/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "recetas",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/recetas"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/recetas/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/proveedores/{{proveedoresId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/recetas",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/recetas/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar empleados",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/recetas/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "detalles-receta",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/detalles-receta"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/detalles-receta/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/empleados/{{empleadosId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/detalles-receta",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/detalles-receta/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar metodos-pago",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/detalles-receta/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "ordenes-compra",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/ordenes-compra"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/ordenes-compra/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/metodos-pago/{{metodos-pagoId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/ordenes-compra",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/ordenes-compra/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar clientes",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/ordenes-compra/1"
-          }
-        }
-      ]
-    },
-    {
-      "name": "detalles-compra",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/detalles-compra"
-          }
-        },
-        {
-          "name": "Consultar",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/detalles-compra/1"
-          }
-        },
-        {
-          "name": "Crear (completar cuerpo según documentación)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            "url": "{{baseUrl}}/api/clientes/{{clientesId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
               }
-            ],
-            "url": "{{baseUrl}}/api/detalles-compra",
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
             }
-          }
+          ]
         },
         {
-          "name": "Actualizar (completar cuerpo)",
-          "request": {
-            "method": "PUT",
-            "url": "{{baseUrl}}/api/detalles-compra/1",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{}"
-            }
-          }
-        },
-        {
-          "name": "Eliminar",
+          "name": "Eliminar inventarios",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/detalles-compra/1"
-          }
+            "url": "{{baseUrl}}/api/inventarios/{{inventariosId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar sucursales",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/sucursales/{{sucursalesId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar productos",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/productos/{{productosId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar categorias",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/categorias/{{categoriasId}}",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 204',()=>pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
         }
       ]
     }

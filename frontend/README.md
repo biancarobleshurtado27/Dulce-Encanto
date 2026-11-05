@@ -18,3 +18,7 @@ Ventas, recetas y órdenes de compra incluyen un formulario de líneas de detall
 Validación realizada: compilación de producción, conexión a las 15 entidades, creación y edición de categoría desde el navegador, confirmación visual de eliminación y limpieza del registro temporal mediante la API. Los CRUD de las 15 entidades se verificaron además en las pruebas del backend. No se ha probado manualmente cada formulario en el navegador.
 
 No hay inicio de sesión. El inventario se administra por separado y las ventas no descuentan existencias automáticamente.
+
+## Resultado de la revisión visual con autenticación
+
+Se comprobó en Chrome la sesión creada por la usuaria, la consulta de una venta con sus detalles, el cierre de sesión con redirección a /login y el regreso al catálogo mediante el formulario de login. Se conservó la sesión activa al terminar. No se modificaron registros empresariales en esta revisión.

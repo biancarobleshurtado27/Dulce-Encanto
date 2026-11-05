@@ -38,3 +38,13 @@ Las rutas CRUD, ejemplos, configuración y pruebas se explican en [backend/DOCUM
 Los totales y la obligación de incluir detalles se validarán mediante transacciones en el backend. No incluye autenticación.
 
 
+
+## Día 2: autenticación
+
+La regla sin autenticación corresponde únicamente al día 1. Desde el día 2, las rutas empresariales requieren JWT. Ver backend/AUTENTICACION.md e INFORME_JWT_DIA_2.md.
+
+Para instalar desde cero: configurar backend/.env, ejecutar npm ci en backend, npm run db:init y node --env-file=.env scripts/migrate-auth.js. Luego arrancar el backend. En frontend ejecutar npm ci y npm run dev. Si el backend usa 3000, ajustar el destino del proxy en frontend/vite.config.js; la configuración actual utiliza 3001.
+
+El frontend se abre en http://localhost:5173/login. Crear la cuenta en /registro. Las contraseñas se guardan como hash; JWT_SECRET nunca se comparte con React. La sesión dura una hora y se pierde al recargar porque el token se conserva en memoria.
+
+El diagrama actualizado está en diagramas/dulce-encanto-dia-2.png y .svg. La colección backend/Dulce-Encanto.postman_collection.json incluye 90 solicitudes y 239 comprobaciones aprobadas. Ver backend/POSTMAN_DIA_2.md antes de ejecutarla: usar una base aislada para pruebas.

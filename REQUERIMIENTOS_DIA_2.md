@@ -16,10 +16,10 @@ El día 2 reemplaza la regla sin autenticación del día 1. Fecha límite indica
 - [x] Adaptar React: login, registro, AuthContext y rutas protegidas.
 - [x] Enviar token en cada llamada protegida; limpiar sesión ante 401 y al salir.
 - [x] Mantener páginas CRUD y selectores relacionados para las 15 entidades.
-- [ ] Actualizar diagrama para incluir Usuario.
-- [ ] Colección Postman completa con auth y casos 400, 401 y 404.
+- [x] Actualizar diagrama para incluir Usuario: 16 entidades, SVG y fuente Mermaid.
+- [x] Colección Postman completa con auth y casos 400, 401, 404 y 409: 90 solicitudes, 239 comprobaciones, sin fallos.
 - [x] Repetir pruebas backend con autenticación y compilar frontend.
-- [ ] Probar visualmente registro, login, CRUD con sesión y cierre de sesión (navegador automatizado no disponible en este paso).
+- [x] Registro realizado por la usuaria. Verificación visual en Chrome: panel autenticado, consulta de detalle de venta, cierre de sesión y regreso al panel mediante login.
 - [ ] Actualizar README, configuración de ejemplo y guía de presentación.
 - [ ] Sincronizar entregables del día 2 en GitHub.
 
