@@ -13,7 +13,8 @@
 - [x] Crear y listar registros probado con una herramienta HTTP equivalente (fetch) contra MySQL.
 - [x] Pruebas de CRUD, relaciones, rollback y totales contra MySQL temporal.
 - [x] Conectar y verificar la instalación personal mediante backend/.env.
-- [ ] Configurar y desarrollar frontend React.
-- [ ] Probar integración frontend/backend.
+- [x] Configurar y desarrollar frontend React con las 15 entidades.
+- [x] Probar integración frontend/backend: lectura de entidades, creación y edición desde navegador, confirmación de eliminación y limpieza mediante API.
+- [ ] Recorrido manual de todos los formularios con datos de demostración.
 
 El backend de desarrollo usa la instalación personal de MySQL configurada en backend/.env y está disponible en http://localhost:3001. Al reiniciar el equipo hay que arrancarlo otra vez (PORT define el puerto). Las pruebas se realizaron en una instancia aislada del puerto 3307; sus datos están fuera del repositorio.

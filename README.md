@@ -13,7 +13,7 @@ Sistema de gestión de inventario, ventas y compras para una cadena ficticia de 
 - database/dulce_encanto.sql: 15 tablas relacionadas.
 
 ## Estado
-Backend Express con conexión MySQL y CRUD de las 15 entidades implementados. Probado en MySQL 8.0.46 en una instancia aislada; la conexión a la instalación personal requiere configurar backend/.env. Interfaz React pendiente. Se requiere MySQL 8.0.16 o posterior para aplicar CHECK.
+Backend Express con conexión MySQL y CRUD de las 15 entidades implementados. Probado en MySQL 8.0.46 en una instancia aislada; la conexión a la instalación personal requiere configurar backend/.env. Interfaz React implementada; ver frontend/README.md para ejecutarla. Se requiere MySQL 8.0.16 o posterior para aplicar CHECK.
 
 ## Ejecutar el servidor
 
@@ -36,4 +36,5 @@ El servidor escucha localmente en http://localhost:3000.
 Las rutas CRUD, ejemplos, configuración y pruebas se explican en [backend/DOCUMENTACION.md](backend/DOCUMENTACION.md). Se incluye una colección Postman en esa carpeta.
 
 Los totales y la obligación de incluir detalles se validarán mediante transacciones en el backend. No incluye autenticación.
+
 
