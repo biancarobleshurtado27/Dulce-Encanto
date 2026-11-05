@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { api } from './routes/api.js';
 import { authRoutes } from './routes/authRoutes.js';
+import { authMiddleware } from './middlewares/authMiddleware.js';
 
 const app = express();
 app.disable('x-powered-by');
@@ -17,7 +18,7 @@ app.get('/api/salud', (_req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api', api);
+app.use('/api', authMiddleware, api);
 
 app.use((_req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
@@ -26,7 +27,8 @@ app.use((_req, res) => {
 app.use((error, _req, res, _next) => {
   if (error.status && error.status >= 400 && error.status < 500 && !error.type) return res.status(error.status).json({error:error.message});
   if (error.code === 'ER_DUP_ENTRY') return res.status(409).json({error:'Ya existe un registro con esos datos únicos'});
-  if (['ER_ROW_IS_REFERENCED_2','ER_NO_REFERENCED_ROW_2'].includes(error.code)) return res.status(409).json({error:'La relación no existe o el registro está siendo utilizado por otros registros'});
+  if (error.code==='ER_NO_REFERENCED_ROW_2') return res.status(400).json({error:'El registro relacionado no existe'});
+  if (error.code==='ER_ROW_IS_REFERENCED_2') return res.status(409).json({error:'El registro está siendo utilizado por otros registros'});
   if (['ER_CHECK_CONSTRAINT_VIOLATED','ER_DATA_TOO_LONG','ER_TRUNCATED_WRONG_VALUE','ER_WARN_DATA_OUT_OF_RANGE','ER_BAD_NULL_ERROR','ER_NO_DEFAULT_FOR_FIELD'].includes(error.code)) return res.status(400).json({error:'Los datos incumplen las reglas de la base de datos'});
   if (['ECONNREFUSED','ER_ACCESS_DENIED_ERROR','ER_BAD_DB_ERROR','ETIMEDOUT'].includes(error.code)) return res.status(503).json({error:'Base de datos no disponible. Revisa la configuración de MySQL'});
   if (error.type === 'entity.parse.failed') {

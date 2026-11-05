@@ -11,14 +11,15 @@ El día 2 reemplaza la regla sin autenticación del día 1. Fecha límite indica
 - [x] Perfil protegido GET /api/auth/me (200 o 401).
 - [x] Bcrypt, contraseña mínima de 8 caracteres; hash nunca devuelto.
 - [x] JWT con expiración y clave en .env.
-- [ ] Middleware Bearer; rutas empresariales protegidas; 401 sin autorización.
-- [ ] Relaciones inexistentes: devolver 400 o 404; dependencia al eliminar: 409.
-- [ ] Adaptar React: login, registro, AuthContext y rutas protegidas.
-- [ ] Enviar token en cada llamada protegida; limpiar sesión ante 401 y al salir.
-- [ ] Mantener páginas CRUD y selectores relacionados para las 15 entidades.
+- [x] Middleware Bearer; rutas empresariales protegidas; 401 sin autorización.
+- [x] Relaciones inexistentes: devolver 400 o 404; dependencia al eliminar: 409.
+- [x] Adaptar React: login, registro, AuthContext y rutas protegidas.
+- [x] Enviar token en cada llamada protegida; limpiar sesión ante 401 y al salir.
+- [x] Mantener páginas CRUD y selectores relacionados para las 15 entidades.
 - [ ] Actualizar diagrama para incluir Usuario.
 - [ ] Colección Postman completa con auth y casos 400, 401 y 404.
-- [ ] Repetir pruebas backend y frontend con autenticación.
+- [x] Repetir pruebas backend con autenticación y compilar frontend.
+- [ ] Probar visualmente registro, login, CRUD con sesión y cierre de sesión (navegador automatizado no disponible en este paso).
 - [ ] Actualizar README, configuración de ejemplo y guía de presentación.
 - [ ] Sincronizar entregables del día 2 en GitHub.
 

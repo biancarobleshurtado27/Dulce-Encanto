@@ -1,7 +1,8 @@
 // Datos exclusivamente ficticios. Ejecutar con el backend encendido.
 const base = process.env.API_URL || 'http://127.0.0.1:3001/api';
+if(!process.env.API_TOKEN) throw new Error('Desde el día 2, configura API_TOKEN con un JWT de una sesión válida.');
 async function request(route, method='GET', body) {
-  const response = await fetch(`${base}/${route}`, {method,headers:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});
+  const response = await fetch(`${base}/${route}`, {method,headers:{'Content-Type':'application/json',Authorization:`Bearer ${process.env.API_TOKEN}`},body:body===undefined?undefined:JSON.stringify(body)});
   const value = await response.json();
   if (!response.ok) throw new Error(`${route}: ${value.error}`);
   return value;

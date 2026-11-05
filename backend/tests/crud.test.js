@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import app from '../src/app.js';
 import { pool } from '../src/config/database.js';
+import {randomBytes} from 'node:crypto';
 
 test('CRUD de las 15 entidades y reglas empresariales', async () => {
   // Ejecutar solo contra una base de pruebas vacía, nunca contra datos personales.
@@ -9,9 +10,16 @@ test('CRUD de las 15 entidades y reglas empresariales', async () => {
   const server = app.listen(0,'127.0.0.1');
   await new Promise(resolve => server.once('listening',resolve));
   const base = `http://127.0.0.1:${server.address().port}/api`;
+  process.env.JWT_SECRET=randomBytes(48).toString('hex');
+  const correo=`crud-${randomBytes(5).toString('hex')}@example.com`;
+  const registration=await fetch(base+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre:'Prueba CRUD',correo,password:'PruebaSegura123!'})});
+  assert.equal(registration.status,201);
+  const authResponse=await fetch(base+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({correo,password:'PruebaSegura123!'})});
+  const {token}=await authResponse.json();
+  assert.ok(token);
   const created = [];
   async function call(route,method='GET',body,status=200) {
-    const response = await fetch(base+route,{method,headers:{'Content-Type':'application/json'},body:body === undefined ? undefined : JSON.stringify(body)});
+    const response = await fetch(base+route,{method,headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:body === undefined ? undefined : JSON.stringify(body)});
     const data = response.status === 204 ? null : await response.json();
     assert.equal(response.status,status,`${method} ${route}: ${JSON.stringify(data)}`);
     return data;
@@ -58,7 +66,7 @@ test('CRUD de las 15 entidades y reglas empresariales', async () => {
     assert.equal((await call('/ordenes-compra/'+o.id_orden_compra)).total,3500);
     await call('/ventas','POST',{id_sucursal:s.id_sucursal,id_empleado:e.id_empleado,id_metodo_pago:mp.id_metodo_pago,detalles:[]},400);
     const before=(await call('/ventas')).length;
-    await call('/ventas','POST',{id_sucursal:s.id_sucursal,id_empleado:e.id_empleado,id_metodo_pago:mp.id_metodo_pago,detalles:[{id_producto:2147483647,cantidad:1,precio_unitario:1}]},409);
+    await call('/ventas','POST',{id_sucursal:s.id_sucursal,id_empleado:e.id_empleado,id_metodo_pago:mp.id_metodo_pago,detalles:[{id_producto:2147483647,cantidad:1,precio_unitario:1}]},400);
     assert.equal((await call('/ventas')).length,before,'Rollback completo');
     await call(`/detalles-venta/${dv.id_detalle_venta}`,'DELETE',undefined,204);
     const remaining=(await call('/ventas/'+v.id_venta)).detalles[0];
@@ -74,6 +82,7 @@ test('CRUD de las 15 entidades y reglas empresariales', async () => {
     await call('/ingredientes/'+ing2.id_ingrediente,'DELETE',undefined,204);
     assert.equal((await call('/entidades')).length,15);
   } finally {
+    await pool.query('DELETE FROM usuario WHERE correo=?',[correo]);
     await new Promise(resolve => server.close(resolve));
     await pool.end();
   }

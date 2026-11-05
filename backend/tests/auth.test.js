@@ -32,6 +32,12 @@ test('Registro, login, perfil y protección de contraseñas',async()=>{
    await call('/register','POST',{nombre:'Prueba',correo:correo.toUpperCase(),password},400);
    await call('/login','POST',{correo,password:'Incorrecta123!'},401);
    const result=await call('/login','POST',{correo,password},200);
+   for(const route of ['categorias','productos','sucursales','inventarios','clientes','ventas','detalles-venta','metodos-pago','empleados','proveedores','ingredientes','recetas','detalles-receta','ordenes-compra','detalles-compra','entidades']) {
+     for(const [method,path] of [['GET',route],['POST',route],['GET',route+'/1'],['PUT',route+'/1'],['DELETE',route+'/1']]) {
+       const response=await fetch(`http://127.0.0.1:${server.address().port}/api/${path}`,{method});
+       assert.equal(response.status,401,`${method} ${path} sin token`);
+     }
+   }
    const payload=jwt.verify(result.token,process.env.JWT_SECRET,{algorithms:['HS256'],issuer:tokenOptions.issuer,audience:tokenOptions.audience});
    assert.equal(payload.exp-payload.iat,3600);
    await call('/me','GET',null,401);
