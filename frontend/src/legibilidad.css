@@ -1,11 +1,14 @@
 /* Tamaños de lectura compartidos por las 15 entidades y las pantallas de acceso. */
 :root{font-size:16px}
+/* El pie participa del flujo del menú: nunca se superpone a los enlaces. */
+.sidebar{overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-bottom:24px}
+.sidebar .side-foot{position:static;inset:auto;margin-top:24px;width:100%;flex-shrink:0}
 body{font-size:16px;line-height:1.6}
 .nav{font-size:15px;padding:12px 10px;line-height:1.45}
 .sidebar h2{font-size:12px;line-height:1.6}
 .side-foot,.side-foot small{font-size:12px;line-height:1.6}
 .side-foot{flex-wrap:wrap;gap:6px}
-.sidebar{padding-bottom:110px}
+.sidebar{padding-bottom:24px}
 .eyebrow{font-size:12px;line-height:1.6}
 .location-tag,.user-name,.session-tools .secondary{font-size:14px;line-height:1.5}
 .topbar{min-height:76px;height:auto;padding-top:14px;padding-bottom:14px;gap:15px}
