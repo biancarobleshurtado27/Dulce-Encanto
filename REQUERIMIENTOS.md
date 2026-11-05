@@ -12,8 +12,8 @@
 - [x] CRUD de las 15 entidades.
 - [x] Crear y listar registros probado con una herramienta HTTP equivalente (fetch) contra MySQL.
 - [x] Pruebas de CRUD, relaciones, rollback y totales contra MySQL temporal.
-- [ ] Conectar y verificar la instalación personal mediante backend/.env.
+- [x] Conectar y verificar la instalación personal mediante backend/.env.
 - [ ] Configurar y desarrollar frontend React.
 - [ ] Probar integración frontend/backend.
 
-La base temporal se ejecuta en 127.0.0.1:3307 y el backend verificado en http://localhost:3001. Estos procesos son de desarrollo: al reiniciar el equipo hay que volver a arrancarlos o configurar la instalación personal. La carpeta de datos de pruebas está fuera del repositorio.
+El backend de desarrollo usa la instalación personal de MySQL configurada en backend/.env y está disponible en http://localhost:3001. Al reiniciar el equipo hay que arrancarlo otra vez (PORT define el puerto). Las pruebas se realizaron en una instancia aislada del puerto 3307; sus datos están fuera del repositorio.
