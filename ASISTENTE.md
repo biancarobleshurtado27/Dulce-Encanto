@@ -1,6 +1,6 @@
 # Asistente: preparación de integración multiagente
 
-Estado: asistente local implementado; conexión al modelo de IA pendiente de la API que proporcionará la usuaria. No se envían datos a proveedores externos y no hay claves del asistente en el frontend.
+Estado: adaptador DeepSeek y coordinador multiagente implementados. La prueba real de conexión devolvió 401 (clave no aceptada). Falta configurar una clave válida para probar respuestas reales. El modo local funciona sin enviar consultas fuera del sistema.
 
 ## Arquitectura preparada
 
@@ -12,12 +12,16 @@ Estado: asistente local implementado; conexión al modelo de IA pendiente de la 
 - Recetas: primeras 10 recetas, sin filtros adicionales.
 - Guía: explicación predefinida de las operaciones del sistema.
 
-Estos módulos son consultas predefinidas, no agentes LLM autónomos. La interfaz informa esta limitación. El coordinador puede ejecutar varios módulos de consulta de forma concurrente. Los resultados se obtienen de MySQL y permiten abrir la sección correspondiente.
+En modo local estos módulos son consultas predefinidas. En modo IA, DeepSeek coordina llamadas de herramientas; cada especialista resume su evidencia mediante una llamada independiente al modelo y el coordinador produce una síntesis final. Se ejecutan hasta tres especialistas concurrentes por consulta. Los datos originales permanecen visibles y cada respuesta indica sus límites. No se utiliza SQL generado por IA.
 
 Las rutas GET /api/asistente/estado y POST /api/asistente/consulta están detrás del middleware JWT. El cuerpo de consulta es {"mensaje":"Buscar pastel de chocolate"}. Las consultas están limitadas a 1000 caracteres. No hay operaciones de escritura, ejecución de código ni SQL generado por IA. Nunca se consulta la tabla Usuario desde el asistente.
 
-## Para completar la conexión
+## Configuración DeepSeek
 
-Hace falta el nombre del proveedor, la documentación de su API, el modelo y el formato de autenticación. La clave se configurará únicamente en backend/.env cuando se confirme ese formato. No pegar claves en el chat ni en archivos del frontend. Después se implementará el adaptador del proveedor y se probará la interpretación de preguntas, selección de herramientas, respuestas basadas en resultados y tratamiento de errores y límites.
+Guardar DEEPSEEK_API_KEY en backend/.env y DEEPSEEK_MODEL=deepseek-flash. Reiniciar el backend después de cambiar la clave. La URL es https://api.deepseek.com/chat/completions; autenticación Bearer. La clave nunca se envía al frontend ni se versiona. La configuración de una clave no garantiza que haya sido aceptada: los rechazos 401, saldo insuficiente 402 y límites 429 se muestran como errores de servicio, sin exponer credenciales.
 
-No se ha implementado envío externo, memoria de conversaciones persistente ni modificación de registros mediante IA.
+El modo IA envía la pregunta y los resultados de las herramientas seleccionadas a DeepSeek. No se incluyen contraseñas, hashes, la tabla Usuario, correos ni teléfonos de clientes o empleados. Se envían únicamente resultados de productos, sucursales, inventario, recetas, nombres de proveedores y resúmenes de transacciones según la consulta. No hay memoria persistente ni modificación de registros mediante IA. Una consulta por usuario a la vez; máximo tres especialistas, respuestas limitadas y espera por llamada de hasta 35 segundos.
+
+Las pruebas simuladas comprobaron coordinación, selección de herramientas permitidas, síntesis, validaciones y errores del proveedor. No prueban la calidad de respuestas reales: esa verificación está pendiente de una clave aceptada.
+
+Documentación oficial consultada: https://api-docs.deepseek.com/ y https://api-docs.deepseek.com/guides/tool_calls/

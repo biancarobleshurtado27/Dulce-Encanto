@@ -18,10 +18,11 @@ function searchTerm(message){
  const ignored=new Set('busca buscar buscame encuentra encontrar quiero necesito tengo donde esta estan hay el la los las un una unos unas de del en por para con que cuanto cuanta cuantos cuantas cual cuales y o a me mi mis producto productos inventario existencia existencias stock disponible disponibles sucursal sucursales receta recetas ingrediente ingredientes dame mostrar muestra consultar consulta porfavor favor'.split(' '));
  return words.filter(w=>!ignored.has(w)).slice(0,8).join(' ').slice(0,100);
 }
-export async function localAssistant(message){
+export async function localAssistant(message,options={}){
  if(typeof message!=='string'||!message.trim()||message.length>1000)throw problem('Escribe una consulta de entre 1 y 1000 caracteres');
- const selected=selectAgents(message);
- const term=searchTerm(message);
+ const selected=options.agentes||selectAgents(message);
+ if(!Array.isArray(selected)||!selected.length||selected.length>6||selected.some(a=>!['busqueda','inventario','ventas','compras','recetas','guia'].includes(a)))throw problem('Especialista no válido');
+ const term=typeof options.termino==='string'?options.termino.slice(0,100):searchTerm(message);
  const like='%'+term.split(/\s+/).map(word=>word.replace(/[\\%_]/g,'\\$&')).join('%')+'%';
  const modules={
   busqueda:async()=>{

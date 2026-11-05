@@ -25,6 +25,7 @@ app.use((_req, res) => {
 });
 
 app.use((error, _req, res, _next) => {
+  if([502,503].includes(error.status)&&!error.code)return res.status(error.status).json({error:error.message});
   if (error.status && error.status >= 400 && error.status < 500 && !error.type) return res.status(error.status).json({error:error.message});
   if (error.code === 'ER_DUP_ENTRY') return res.status(409).json({error:'Ya existe un registro con esos datos únicos'});
   if (error.code==='ER_NO_REFERENCED_ROW_2') return res.status(400).json({error:'El registro relacionado no existe'});
