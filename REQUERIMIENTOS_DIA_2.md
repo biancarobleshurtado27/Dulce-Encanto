@@ -29,3 +29,13 @@ No se exigen roles ni permisos. La sección específica de Usuario exige registr
 
 
 - [x] Archivos de modelo, controlador, rutas, página y servicio por entidad; 15 URLs protegidas y lógica común reutilizable. Pruebas backend y compilación repetidas tras reorganizar.
+
+## Mejoras de uso de las tablas
+
+- [x] Orden ascendente y descendente al pulsar los encabezados.
+- [x] Búsqueda sin distinguir tildes ni mayúsculas.
+- [x] Inventario: filtros de agotados, mínimo o por debajo, y por encima del mínimo.
+- [x] Etiquetas de existencias con texto y colores adaptados al modo oscuro.
+- [x] Hora de consulta de los datos y paginación corregida tras eliminar.
+- [x] Exportación CSV conserva el orden y los filtros actuales.
+- [x] Compilación, renderizado y casos de datos verificados.

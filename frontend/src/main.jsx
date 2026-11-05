@@ -20,3 +20,5 @@ createRoot(document.getElementById('root')).render(
     </AuthProvider>
   </BrowserRouter>
 );
+
+import './tablas.css';
