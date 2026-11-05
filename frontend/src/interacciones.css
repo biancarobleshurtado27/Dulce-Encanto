@@ -1,0 +1,42 @@
+/* Movimiento breve y funcional; se respeta la preferencia de movimiento reducido. */
+@keyframes entrance{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@keyframes backdrop-in{from{opacity:0}to{opacity:1}}
+@keyframes drawer-in{from{opacity:0;transform:translateX(35px)}to{opacity:1;transform:translateX(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes loading-sheen{from{background-position:200% 0}to{background-position:-200% 0}}
+.content{animation:entrance 220ms ease-out}
+button,a,input,select,textarea{transition:background-color 160ms ease,border-color 160ms ease,box-shadow 160ms ease,color 160ms ease,transform 160ms ease}
+button:hover{filter:none}
+.primary:hover:not(:disabled){background:#6a2640;box-shadow:0 5px 14px #873d5726;transform:translateY(-1px)}
+.secondary:hover:not(:disabled),.icon-button:hover:not(:disabled){background:#f8dbe2}
+button:active:not(:disabled){transform:translateY(1px)}
+.nav{position:relative;transition:background-color 160ms ease,color 160ms ease}
+.nav:hover{background:#fff0f2;color:#6a2640}
+.nav.active{box-shadow:inset 3px 0 #873d57}
+.nav svg{transition:transform 160ms ease}
+.nav:hover svg{transform:translateY(-1px)}
+.metric{transition:box-shadow 180ms ease,transform 180ms ease;animation:entrance 260ms ease-out both}
+.metric:nth-child(2){animation-delay:35ms}.metric:nth-child(3){animation-delay:70ms}.metric:nth-child(4){animation-delay:105ms}
+.metric:hover{transform:translateY(-3px);box-shadow:0 8px 22px #6a26400d}
+.metric:hover svg{background:#f3ccd8}
+tbody tr{transition:background-color 140ms ease}tbody tr:hover{background:#fff5f7}
+.product-cell img{transition:transform 180ms ease}.product-cell:hover img{transform:scale(1.06)}
+.sale-card{transition:box-shadow 160ms ease,background-color 160ms ease}.sale-card:hover{background:#fff0f2;box-shadow:0 4px 14px #6a26400a}
+.sale-line,.detail{animation:entrance 180ms ease-out}
+.overlay{animation:backdrop-in 160ms ease-out}
+.dialog{animation:entrance 200ms ease-out}.product-drawer{animation:drawer-in 220ms ease-out}
+.auth-frame{animation:entrance 300ms ease-out}
+.alert{animation:entrance 180ms ease-out}
+.success-toast{position:fixed;right:28px;bottom:28px;max-width:min(460px,calc(100vw - 32px));z-index:60;box-shadow:0 8px 28px #21462e28;align-items:center;margin:0}
+.success-toast button{min-height:32px;min-width:32px;border-radius:6px}.success-toast button:hover{background:#ffffff20}
+.loading-state{padding:45px 24px;display:grid;gap:14px;color:#6e595f}
+.loading-state span{font-size:14px;line-height:1.6;margin-bottom:8px}
+.loading-state i{height:19px;background:linear-gradient(90deg,#fff0f2 25%,#f8dbe2 50%,#fff0f2 75%);background-size:200% 100%;border-radius:5px;animation:loading-sheen 1.5s linear infinite}
+.loading-state i:nth-child(2){width:90%}.loading-state i:nth-child(3){width:75%}.loading-state i:nth-child(4){width:85%}
+button[aria-busy="true"]::before{content:'';height:14px;width:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin 700ms linear infinite;flex-shrink:0}
+.mobile-menu-backdrop{display:none}
+.back-to-top{position:fixed;bottom:26px;right:26px;z-index:25;width:46px;height:46px;border:1px solid #e0c6cf;border-radius:50%;background:white;color:#873d57;box-shadow:0 5px 20px #6a264018;animation:entrance 180ms ease-out}
+.back-to-top:hover{background:#fff0f2;transform:translateY(-2px)}
+.history-search:focus,.tools input:focus{box-shadow:0 0 0 3px #873d5718}
+@media(max-width:650px){.mobile-menu-backdrop{position:fixed;inset:0;display:block;background:#25181c66;backdrop-filter:blur(2px);z-index:19;border:0;border-radius:0;animation:backdrop-in 160ms ease-out}.sidebar.open{box-shadow:8px 0 30px #25181c18;animation:drawer-in 180ms ease-out}.success-toast{right:16px;bottom:16px}.back-to-top{bottom:18px;right:18px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.metric:hover,.primary:hover:not(:disabled),button:active:not(:disabled),.product-cell:hover img,.nav:hover svg,.back-to-top:hover{transform:none}}

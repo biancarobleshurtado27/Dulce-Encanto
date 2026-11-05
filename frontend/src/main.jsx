@@ -25,3 +25,4 @@ createRoot(document.getElementById('root')).render(<BrowserRouter><AuthProvider>
 
 import './atelier.css';
 import './legibilidad.css';
+import './interacciones.css';
