@@ -19,7 +19,7 @@ Se incorporó un componente común para avisos en formularios, notificaciones, a
 - 504: DeepSeek supera el plazo de respuesta del backend.
 - 413, 415 y 422: presentaciones previstas para tamaño, formato y reglas empresariales cuando el servidor las devuelva. No se agregan cargas de archivos ni se cambian las validaciones existentes de 400 a 422.
 
-Una respuesta HTTP 200 ordinaria al cargar tablas no genera avisos repetidos. Las confirmaciones se cierran a los 6,5 segundos; el contador se pausa al colocar el puntero encima o mover el foco al aviso. Los errores de formularios se conservan hasta corregir, cerrar o volver a intentar. Las listas vacías siguen siendo respuestas correctas y no se convierten en 404.
+Una respuesta HTTP 200 ordinaria al cargar tablas no genera avisos repetidos. Los avisos flotantes y los avisos dentro de formularios se cierran a los 30 segundos; el contador se pausa al colocar el puntero encima o mover el foco al aviso. El cierre del aviso no borra los datos del formulario. Un nuevo error vuelve a mostrar su aviso durante 30 segundos. Las listas vacías siguen siendo respuestas correctas y no se convierten en 404.
 
 ## Red y reintentos
 

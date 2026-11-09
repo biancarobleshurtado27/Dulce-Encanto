@@ -13,11 +13,11 @@ export default function StatusCenter(){
  return <aside className="status-center" aria-label="Avisos de Dulce Encanto">{offline&&<StatusAlert error={{kind:'offline'}}/>}{items.map(item=><StatusToast key={item.id} item={item} onClose={()=>setItems(previous=>previous.filter(p=>p.id!==item.id))} onLogin={()=>navigate('/login')}/>)}</aside>;
 }
 function StatusToast({item,onClose,onLogin}){
- const [paused,setPaused]=useState(false);const remaining=useRef(6500),closeRef=useRef(onClose);closeRef.current=onClose;
+ const [paused,setPaused]=useState(false);const remaining=useRef(30000),closeRef=useRef(onClose);closeRef.current=onClose;
  useEffect(()=>{
-  if(paused||!(Number(item.status)<300||item.status==='connected'))return;
+  if(paused)return;
   const start=Date.now(),timer=setTimeout(()=>closeRef.current(),remaining.current);
   return()=>{clearTimeout(timer);remaining.current=Math.max(0,remaining.current-(Date.now()-start));};
  },[paused,item.status]);
- return <div onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)} onFocusCapture={()=>setPaused(true)} onBlurCapture={event=>{if(!event.currentTarget.contains(event.relatedTarget))setPaused(false);}}><StatusAlert status={item.status} message={item.message} onClose={onClose} onLogin={item.status===401?onLogin:undefined}/></div>;
+ return <div onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)} onFocusCapture={()=>setPaused(true)} onBlurCapture={event=>{if(!event.currentTarget.contains(event.relatedTarget))setPaused(false);}}><StatusAlert autoDismiss={false} status={item.status} message={item.message} onClose={onClose} onLogin={item.status===401?onLogin:undefined}/></div>;
 }
