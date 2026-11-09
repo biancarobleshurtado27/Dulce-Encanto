@@ -11,11 +11,11 @@ export async function deepseekChat(messages,extra={},fetcher=fetch){
  if(!key)throw problem('Configura DEEPSEEK_API_KEY en backend/.env',503);
  let response;
  try{response=await fetcher('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${key}`},body:JSON.stringify({model:process.env.DEEPSEEK_MODEL||'deepseek-flash',messages,max_tokens:1100,thinking:{type:'disabled'},stream:false,...extra}),signal:AbortSignal.timeout(35000)});}
- catch{throw problem('DeepSeek no respondió a tiempo. Inténtalo de nuevo.',503);}
- if(!response.ok){const messages={401:'DeepSeek rechazó la clave. Revisa DEEPSEEK_API_KEY.',402:'La cuenta de DeepSeek no tiene saldo suficiente.',429:'DeepSeek alcanzó su límite de solicitudes. Inténtalo más tarde.'};throw problem(messages[response.status]||'DeepSeek no está disponible en este momento.',503);}
- const data=await response.json();
+ catch(error){throw problem(error.name==='TimeoutError'||error.name==='AbortError'?'DeepSeek no respondió dentro del plazo.':'No fue posible conectar con DeepSeek.',error.name==='TimeoutError'||error.name==='AbortError'?504:503);}
+ if(!response.ok){const messages={401:'DeepSeek rechazó la clave. Revisa DEEPSEEK_API_KEY.',402:'La cuenta de DeepSeek no tiene saldo suficiente.',429:'DeepSeek alcanzó su límite de solicitudes. Inténtalo más tarde.'};throw problem(messages[response.status]||'DeepSeek no está disponible en este momento.',response.status===429?429:503);}
+ let data;try{data=await response.json();}catch{throw problem('DeepSeek devolvió un formato no válido.',502);}
  const message=data.choices?.[0]?.message;
- if(!message)throw problem('DeepSeek devolvió una respuesta no válida.',503);
+ if(!message)throw problem('DeepSeek devolvió una respuesta no válida.',502);
  return message;
 }
 

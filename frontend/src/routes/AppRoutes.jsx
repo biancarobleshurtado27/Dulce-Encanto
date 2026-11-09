@@ -1,3 +1,4 @@
+import NoEncontrado from '../pages/NoEncontrado';
 import React from 'react';
 import {Routes, Route, Navigate} from 'react-router-dom';
 import RutaProtegida from '../components/RutaProtegida';
@@ -39,7 +40,8 @@ export default function AppRoutes() {
       <Route path="/detalles-receta" element={<RutaProtegida><DetallesReceta/></RutaProtegida>}/>
       <Route path="/ordenes-compra" element={<RutaProtegida><OrdenesCompra/></RutaProtegida>}/>
       <Route path="/detalles-compra" element={<RutaProtegida><DetallesCompra/></RutaProtegida>}/>
-      <Route path="*" element={<Navigate to="/productos" replace/>}/>
+      <Route path="/" element={<Navigate to="/productos" replace/>}/>
+      <Route path="*" element={<NoEncontrado/>}/>
     </Routes>
   );
 }

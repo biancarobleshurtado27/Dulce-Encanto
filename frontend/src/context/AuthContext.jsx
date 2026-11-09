@@ -1,3 +1,4 @@
+import {notifyStatus} from '../services/status';
 import React,{createContext,useContext,useEffect,useState} from 'react';
 import {api,setToken} from '../services/api';
 const AuthContext=createContext(null);
@@ -23,7 +24,7 @@ export function AuthProvider({children}){
     setToken(token);
     const usuario=await api('auth/me');
     if(active)setSession({usuario,expiresAt});
-   }catch{if(active)logout();}
+   }catch(error){if(active)logout(error?.status===401);}
    finally{if(active)setLoading(false);}
   }
   restore();return()=>{active=false;};
@@ -39,7 +40,7 @@ export function AuthProvider({children}){
   const result=await api('auth/login','POST',{correo,password});
   const expiresAt=expiration(result.token);
   try{sessionStorage.setItem(STORAGE_KEY,result.token);}catch{throw new Error('Permite el almacenamiento de esta pestaña para conservar la sesión al actualizar.');}
-  setToken(result.token);setExpired(false);setSession({usuario:result.usuario,expiresAt});
+  setToken(result.token);setExpired(false);setSession({usuario:result.usuario,expiresAt});notifyStatus(200,'Sesión iniciada. Bienvenida a Dulce Encanto.');
  }
  return <AuthContext.Provider value={{usuario:session?.usuario,login,logout,expired,loading}}>{children}</AuthContext.Provider>;
 }

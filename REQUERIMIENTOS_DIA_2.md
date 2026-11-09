@@ -39,3 +39,13 @@ No se exigen roles ni permisos. La sección específica de Usuario exige registr
 - [x] Hora de consulta de los datos y paginación corregida tras eliminar.
 - [x] Exportación CSV conserva el orden y los filtros actuales.
 - [x] Compilación, renderizado y casos de datos verificados.
+
+## Avisos y estados HTTP
+
+- [x] Avisos comunes para los códigos solicitados y estados de red, con diseño claro/oscuro.
+- [x] Confirmaciones, errores de formulario, tiempo de espera y sesión vencida.
+- [x] Página 404 propia y controles para volver al catálogo.
+- [x] Retry-After en el límite de correo manual y errores externos 502/504 diferenciados.
+- [x] Pruebas de regresión y revisión visual en escritorio y móvil.
+
+Detalles y alcance en ESTADOS_Y_AVISOS.md.

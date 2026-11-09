@@ -14,6 +14,7 @@
     "preview": "vite preview",
     "build": "vite build",
     "dev": "vite",
-    "check:render": "node scripts/check-render.mjs"
+    "check:render": "node scripts/check-render.mjs",
+    "check:status": "node scripts/check-status.mjs"
   }
 }

@@ -1,3 +1,5 @@
+import StatusCenter from './components/StatusCenter';
+import './estados.css';
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
@@ -15,6 +17,7 @@ import './notificaciones.css';
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <AuthProvider>
+      <StatusCenter/>
       <AssistantWidget/>
       <AppRoutes/>
     </AuthProvider>

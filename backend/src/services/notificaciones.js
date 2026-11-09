@@ -51,7 +51,7 @@ export async function sendReport(type='manual'){
   if(!lock.adquirido)throw problem('Hay otro informe en proceso. Espera un momento.',409);
   if(type==='manual'){
    const [[last]]=await db.query("SELECT TIMESTAMPDIFF(SECOND,MAX(fecha),NOW()) AS segundos FROM notificacion_envio WHERE tipo='manual' AND estado IN ('preparando','enviando','enviado')");
-   if(last.segundos!==null&&last.segundos<60)throw problem('Espera un minuto antes de solicitar otro correo manual.',429);
+   if(last.segundos!==null&&last.segundos<60){const error=problem('Espera un minuto antes de solicitar otro correo manual.',429);error.retryAfter=60-last.segundos;throw error;}
   }
   const data=await alertSnapshot();
   const fingerprint=createHash('sha256').update(JSON.stringify({productos:data.productos,compras:data.compras})).digest('hex');

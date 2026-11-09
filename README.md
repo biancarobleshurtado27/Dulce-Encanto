@@ -125,3 +125,7 @@ El inventario se administra por su CRUD; las ventas no descuentan existencias au
 
 
 
+
+## Avisos para el usuario
+
+Los formularios y operaciones muestran avisos con códigos HTTP, acciones de recuperación y adaptación a los temas claro y oscuro. Las rutas desconocidas tienen una página 404. Ver [Estados y avisos](ESTADOS_Y_AVISOS.md) para los códigos, condiciones y pruebas; ejecutar `npm run check:status` en frontend para verificar la integración.

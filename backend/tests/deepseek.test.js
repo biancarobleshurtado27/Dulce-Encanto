@@ -16,6 +16,11 @@ test('Rechaza herramientas desconocidas, entradas vacías y errores del proveedo
  await assert.rejects(()=>multiAgentAssistant(''),/consulta/);
  await assert.rejects(()=>multiAgentAssistant('Borrar datos',{chat:async()=>({tool_calls:[{id:'bad',function:{name:'sql',arguments:'{}'}}]})}),/no permitida/);
  const original=process.env.DEEPSEEK_API_KEY;process.env.DEEPSEEK_API_KEY='clave-ficticia-de-prueba';
- try{for(const status of [401,402,429,500])await assert.rejects(()=>deepseekChat([] ,{},async()=>({ok:false,status})),error=>error.status===503&&!error.message.includes('clave-ficticia'));}
+ try{
+  for(const status of [401,402,429,500])await assert.rejects(()=>deepseekChat([] ,{},async()=>({ok:false,status})),error=>error.status===(status===429?429:503)&&!error.message.includes('clave-ficticia'));
+  await assert.rejects(()=>deepseekChat([],{},async()=>{throw Object.assign(new Error('timeout ficticio'),{name:'TimeoutError'});}),error=>error.status===504);
+  await assert.rejects(()=>deepseekChat([],{},async()=>({ok:true,json:async()=>{throw new Error('JSON incorrecto');}})),error=>error.status===502);
+  await assert.rejects(()=>deepseekChat([],{},async()=>({ok:true,json:async()=>({choices:[]})})),error=>error.status===502);
+ }
  finally{if(original===undefined)delete process.env.DEEPSEEK_API_KEY;else process.env.DEEPSEEK_API_KEY=original;}
 });
